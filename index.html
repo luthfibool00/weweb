@@ -12,8 +12,8 @@
  * 
  * =================================================================
  * 
- * Halo! Selamat datang di repositori ini.
- * Dibuat oleh: pyy
+ * welcome bos
+ * Dibuat oleh: Ltzy
  * 
 -->
 
@@ -97,7 +97,7 @@
             white-space: nowrap;
             width: 0;
             animation: typing 2s steps(6, end) forwards, blink 0.8s infinite;
-            animation-delay: 1s; /* Mulai ngetik setelah foto muncul */
+            animation-delay: 1s; 
         }
 
         @keyframes typing {
@@ -141,7 +141,7 @@
             letter-spacing: 2px;
         }
 
-        /* Tombol Glow */
+        /* Tombol Glow (Lihat Repositori) */
         .btn-glow {
             margin-top: 25px;
             padding: 10px 25px;
@@ -163,6 +163,31 @@
             color: #0d1117;
             box-shadow: 0 0 15px #58a6ff, 0 0 30px #58a6ff;
             cursor: pointer;
+        }
+
+        /* Tombol Musik */
+        .btn-music {
+            margin-top: 20px;
+            padding: 8px 20px;
+            color: #58a6ff;
+            border: 1px solid #58a6ff;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 4.2s;
+        }
+
+        .btn-music:hover {
+            background: #58a6ff;
+            color: #0d1117;
+            box-shadow: 0 0 10px #58a6ff;
         }
 
         @keyframes fadeIn {
@@ -192,8 +217,31 @@
 
         <div class="author">Dibuat oleh <span>pyy</span></div>
 
+        <!-- Tombol Repositori -->
         <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
+
+        <!-- Tombol Musik -->
+        <button id="musicBtn" class="btn-music" onclick="toggleMusic()">🎵 Play Music</button>
+        <audio id="bgMusic" loop>
+            <source src="musik.mp3" type="audio/mpeg">
+        </audio>
+
     </div>
+
+    <!-- Script JavaScript untuk memutar musik -->
+    <script>
+        function toggleMusic() {
+            var audio = document.getElementById("bgMusic");
+            var btn = document.getElementById("musicBtn");
+            if (audio.paused) {
+                audio.play();
+                btn.innerHTML = "⏸️ Pause Music";
+            } else {
+                audio.pause();
+                btn.innerHTML = "🎵 Play Music";
+            }
+        }
+    </script>
 
 </body>
 </html>
