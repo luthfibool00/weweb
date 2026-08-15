@@ -24,46 +24,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supian - by pyy</title>
     <style>
-        /* Desain untuk tampilan di Browser / Website */
+        /* Pengaturan Dasar & Background */
         body {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
-            background-color: #0d1117; /* Warna latar belakang gelap khas GitHub */
+            background-color: #0d1117; 
             color: #c9d1d9; 
             font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Mencegah scroll dari efek partikel */
+            position: relative;
         }
 
+        /* Efek Partikel Bintang (Background) */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center;
+            animation: moveStars 150s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes moveStars {
+            from { background-position: 0 0; }
+            to { background-position: -10000px 5000px; }
+        }
+
+        /* Kontainer Utama */
         .container {
             text-align: center;
+            z-index: 1; /* Supaya teks berada di atas partikel */
+            padding: 20px;
+        }
+
+        /* Efek Mengetik pada Judul */
+        .typewriter {
+            display: inline-block;
         }
 
         h1 {
             font-size: 5rem;
             margin: 0;
             letter-spacing: 8px;
-            /* Membuat efek teks gradasi dan menyala */
             background: linear-gradient(90deg, #58a6ff, #1f6feb);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0px 0px 25px rgba(88, 166, 255, 0.4);
+            
+            /* Animasi Mengetik */
+            overflow: hidden;
+            border-right: 4px solid #58a6ff;
+            white-space: nowrap;
+            width: 0;
+            animation: typing 2s steps(6, end) forwards, blink 0.8s infinite;
         }
 
-        p {
-            font-size: 1.2rem;
-            margin-top: 10px;
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #58a6ff; }
+        }
+
+        /* Teks Deskripsi */
+        .description {
+            font-size: 1.1rem;
+            margin-top: 15px;
             color: #8b949e;
+            max-width: 500px;
+            line-height: 1.6;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 2.2s; /* Muncul setelah teks selesai mengetik */
         }
 
+        /* Info Pembuat */
         .author {
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 1rem;
             border-top: 1px solid #30363d;
             padding-top: 15px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 2.5s;
         }
 
         .author span {
@@ -71,14 +126,55 @@
             font-weight: bold;
             letter-spacing: 2px;
         }
+
+        /* Tombol Glow */
+        .btn-glow {
+            margin-top: 25px;
+            padding: 10px 25px;
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: 2px solid #58a6ff;
+            border-radius: 8px;
+            transition: 0.3s ease-in-out;
+            background-color: rgba(13, 17, 23, 0.8);
+            display: inline-block;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 2.8s;
+        }
+
+        .btn-glow:hover {
+            background-color: #58a6ff;
+            color: #0d1117;
+            box-shadow: 0 0 15px #58a6ff, 0 0 30px #58a6ff;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Animasi Background -->
+    <div class="stars"></div>
+
+    <!-- Konten Web -->
     <div class="container">
-        <h1>SUPIAN</h1>
-        <p>Welcome to this project</p>
+        <div class="typewriter">
+            <h1>SUPIAN</h1>
+        </div>
+        
+        <p class="description">
+            Selamat datang! Halaman ini adalah ruang dokumentasi eksperimen kode, tugas, dan proyek dari kelas 87, SMP Negeri 1 Sampit.
+        </p>
+
         <div class="author">Dibuat oleh <span>pyy</span></div>
+
+        <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
     </div>
 
 </body>
