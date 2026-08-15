@@ -110,6 +110,19 @@
             50% { border-color: #58a6ff; }
         }
 
+        /* Teks Lirik (Fitur Baru) */
+        .lyrics {
+            margin-top: 15px;
+            font-style: italic;
+            color: #8b949e;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 2.8s; /* Muncul tepat setelah efek ketik selesai */
+        }
+
         /* Teks Deskripsi */
         .description {
             font-size: 1.1rem;
@@ -121,7 +134,7 @@
             margin-right: auto;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 3s; 
+            animation-delay: 3.5s; 
         }
 
         /* Info Pembuat */
@@ -132,7 +145,7 @@
             padding-top: 15px;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 3.5s;
+            animation-delay: 4s;
         }
 
         .author span {
@@ -155,7 +168,7 @@
             display: inline-block;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 4s;
+            animation-delay: 4.5s;
         }
 
         .btn-glow:hover {
@@ -181,13 +194,41 @@
             margin-right: auto;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 4.2s;
+            animation-delay: 4.8s;
         }
 
         .btn-music:hover {
             background: #58a6ff;
             color: #0d1117;
             box-shadow: 0 0 10px #58a6ff;
+        }
+
+        /* Kotak Penghitung Mundur (Fitur Baru) */
+        .countdown-box {
+            margin: 25px auto 0 auto;
+            padding: 15px;
+            border: 1px dashed #58a6ff;
+            background-color: rgba(13, 17, 23, 0.6);
+            border-radius: 10px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 5.2s; /* Muncul paling akhir */
+            display: inline-block;
+        }
+        
+        .countdown-title { 
+            font-size: 0.8rem; 
+            color: #8b949e; 
+            margin-bottom: 5px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+        
+        #countdown-timer { 
+            font-size: 1.1rem; 
+            color: #58a6ff; 
+            font-weight: bold; 
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.5); 
         }
 
         @keyframes fadeIn {
@@ -211,8 +252,13 @@
             <h1>SUPIAN</h1>
         </div>
         
+        <!-- Lirik Dewa 19 Ditambahkan di sini -->
+        <div class="lyrics">
+            "Meskipun apa kata mereka, takkan mengubah cintaku<br>Walaupun dunia mencela, takkan goyahkan hatiku"
+        </div>
+        
         <p class="description">
-            Wellcome le Halaman ini adalah ruang eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.
+            wellcome le! Halaman ini adalah ruang dokumentasi eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.
         </p>
 
         <div class="author">Dibuat oleh <span>pyy</span></div>
@@ -222,14 +268,22 @@
 
         <!-- Tombol Musik -->
         <button id="musicBtn" class="btn-music" onclick="toggleMusic()">🎵 Play Music</button>
+        
+        <!-- Penghitung Mundur Ditambahkan di sini -->
+        <div class="countdown-box">
+            <div class="countdown-title">🚀 Menuju Peringatan HUT SMPN 1 Sampit</div>
+            <div id="countdown-timer">Menghitung waktu...</div>
+        </div>
+
         <audio id="bgMusic" loop>
             <source src="musik.mp3" type="audio/mpeg">
         </audio>
 
     </div>
 
-    <!-- Script JavaScript untuk memutar musik -->
+    <!-- Script JavaScript untuk Musik dan Hitung Mundur -->
     <script>
+        // Logika Musik
         function toggleMusic() {
             var audio = document.getElementById("bgMusic");
             var btn = document.getElementById("musicBtn");
@@ -241,6 +295,26 @@
                 btn.innerHTML = "🎵 Play Music";
             }
         }
+
+        // Logika Penghitung Mundur ke Februari 2027
+        var countDownDate = new Date("Feb 1, 2027 00:00:00").getTime();
+        
+        var hitungMundur = setInterval(function() {
+            var sekarang = new Date().getTime();
+            var jarak = countDownDate - sekarang;
+
+            var hari = Math.floor(jarak / (1000 * 60 * 60 * 24));
+            var jam = Math.floor((jarak % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var menit = Math.floor((jarak % (1000 * 60 * 60)) / (1000 * 60));
+            var detik = Math.floor((jarak % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown-timer").innerHTML = hari + " Hari " + jam + " Jam " + menit + " Menit " + detik + " Detik ";
+
+            if (jarak < 0) {
+                clearInterval(hitungMundur);
+                document.getElementById("countdown-timer").innerHTML = "🎉 SELAMAT HARI ULANG TAHUN! 🎉";
+            }
+        }, 1000);
     </script>
 
 </body>
