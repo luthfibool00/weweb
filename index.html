@@ -33,10 +33,7 @@
         h1 { font-size: 4.5rem; margin: 0; background: linear-gradient(90deg, #58a6ff, #1f6feb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .description { font-size: 1.1rem; margin-top: 10px; color: #8b949e; line-height: 1.6; }
         
-        /* KOTAK LIRIK BARU */
-        .lyric-box { margin: 25px auto; padding: 15px; border-left: 4px solid #58a6ff; background: rgba(88, 166, 255, 0.1); min-height: 50px; display: flex; align-items: center; justify-content: center; font-style: italic; font-size: 1.2rem; color: #58a6ff; border-radius: 0 10px 10px 0; }
-        
-        .author { margin-top: 10px; font-size: 1rem; }
+        .author { margin-top: 20px; font-size: 1rem; }
         .author span { color: #58a6ff; font-weight: bold; }
         .btn-glow, .btn-music { display: inline-block; margin-top: 20px; padding: 10px 25px; text-decoration: none; font-size: 1rem; border-radius: 8px; cursor: pointer; }
         .btn-glow { color: #58a6ff; border: 2px solid #58a6ff; background-color: rgba(13, 17, 23, 0.8); }
@@ -54,9 +51,6 @@
         <h1>SUPIAN</h1>
         <p class="description">wellcome le! Halaman ini adalah ruang dokumentasi eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.</p>
         
-        <!-- KOTAK LIRIK -->
-        <div class="lyric-box" id="syncLyrics">Klik Play untuk mulai lirik 🎵</div>
-
         <div class="author">Dibuat oleh <span>pyy</span></div>
         <div>
             <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
@@ -82,26 +76,6 @@
     <script>
         var audio = document.getElementById("bgMusic");
         var btn = document.getElementById("musicBtn");
-        var lyricBox = document.getElementById("syncLyrics");
-
-        // SESUAIKAN WAKTU DI SINI (Detik)
-        const lirikLagu = [
-            { time: 0, text: "🎵 (Intro Musik) 🎵" },
-            { time: 10, text: "Meskipun apa kata mereka" },
-            { time: 15, text: "Takkan mengubah cintaku" },
-            { time: 20, text: "Walaupun dunia mencela" },
-            { time: 25, text: "Takkan goyahkan hatiku" }
-        ];
-
-        audio.addEventListener("timeupdate", function() {
-            let currentTime = audio.currentTime;
-            for (let i = lirikLagu.length - 1; i >= 0; i--) {
-                if (currentTime >= lirikLagu[i].time) {
-                    lyricBox.innerHTML = lirikLagu[i].text;
-                    break;
-                }
-            }
-        });
 
         function toggleMusic() {
             if (audio.paused) { audio.play(); btn.innerHTML = "⏸️ Pause"; }
