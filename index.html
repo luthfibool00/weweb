@@ -24,128 +24,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supian - by pyy</title>
     <style>
-        body { 
-            margin: 0; padding: 0; height: 100vh; 
-            background-color: #0d1117; color: #c9d1d9; 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; justify-content: center; align-items: center; 
-            overflow: hidden; position: relative; 
-        }
+        body { margin: 0; padding: 0; height: 100vh; background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
 
-        .stars { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
-            background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center; 
-            animation: moveStars 150s linear infinite; opacity: 0.3; 
-        }
+        .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center; animation: moveStars 150s linear infinite; opacity: 0.3; }
         @keyframes moveStars { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
 
-        /* OVERLAY LOGIN */
-        #overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #0d1117; z-index: 999; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-        }
-        .input-nama { 
-            padding: 12px 20px; border-radius: 8px; border: 1px solid #58a6ff; 
-            background: rgba(13, 17, 23, 0.8); color: #58a6ff; text-align: center; 
-            margin-bottom: 15px; font-family: inherit; font-size: 1.1rem; outline: none;
-            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
-        }
-        .btn-start { 
-            padding: 10px 35px; border: 1px solid #58a6ff; background: #58a6ff; 
-            color: #0d1117; cursor: pointer; border-radius: 8px; font-weight: bold; 
-            font-family: inherit; font-size: 1.1rem; transition: 0.3s;
-        }
-        .btn-start:hover { box-shadow: 0 0 15px #58a6ff; }
+        /* LAYAR LOGIN */
+        #login-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:#0d1117; z-index:99; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        .input-nama { padding: 10px; border-radius: 5px; border: 1px solid #58a6ff; background: transparent; color: #58a6ff; text-align: center; margin-bottom: 10px; }
+        .btn-start { padding: 10px 30px; border: 1px solid #58a6ff; background: #58a6ff; color: #0d1117; cursor: pointer; border-radius: 5px; font-weight: bold; }
 
-        /* KONTAINER UTAMA (Disusun agar pas di tengah HP) */
-        .container { 
-            text-align: center; z-index: 1; padding: 15px; display: none; 
-            max-width: 400px; width: 90%;
-        }
-        
-        .profile-pic { 
-            width: 110px; height: 110px; border-radius: 50%; object-fit: cover; 
-            border: 2px solid #58a6ff; box-shadow: 0 0 15px rgba(88, 166, 255, 0.4); 
-            margin-bottom: 12px; 
-        }
+        .container { text-align: center; z-index: 1; padding: 20px; display: none; }
+        .profile-pic { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #58a6ff; box-shadow: 0 0 20px rgba(88, 166, 255, 0.5); margin-bottom: 20px; }
 
-        /* EFEK KETIK JUDUL */
-        h1 { 
-            font-size: 3.2rem; margin: 0 0 10px 0; letter-spacing: 6px; 
-            background: linear-gradient(90deg, #58a6ff, #1f6feb); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            display: inline-block; overflow: hidden; border-right: 3px solid #58a6ff; 
-            white-space: nowrap; width: 0; 
-            animation: typing 1.5s steps(6, end) forwards, blink 0.8s infinite; 
-        }
+        h1 { font-size: 5rem; margin: 0; letter-spacing: 8px; background: linear-gradient(90deg, #58a6ff, #1f6feb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 0px 25px rgba(88, 166, 255, 0.4); overflow: hidden; border-right: 4px solid #58a6ff; white-space: nowrap; width: 0; animation: typing 2s steps(6, end) forwards, blink 0.8s infinite; }
         @keyframes typing { from { width: 0; } to { width: 100%; } }
         @keyframes blink { from, to { border-color: transparent; } 50% { border-color: #58a6ff; } }
 
-        .description { font-size: 0.95rem; margin-top: 5px; color: #8b949e; line-height: 1.4; margin-bottom: 20px; }
-        
-        /* KALKULATOR UMUR YANG LEBIH RAPI & PADAT */
-        .calc-box { 
-            padding: 12px; border: 1px dashed rgba(88, 166, 255, 0.5); 
-            border-radius: 8px; background: rgba(13, 17, 23, 0.6); 
-            display: inline-block; width: 100%; max-width: 320px; box-sizing: border-box;
-        }
-        .calc-title { font-size: 0.75rem; color: #8b949e; margin-bottom: 8px; letter-spacing: 1px; }
-        
-        .calc-row { display: flex; justify-content: center; gap: 6px; align-items: center; }
-        
-        .input-date { 
-            background: transparent; color: #58a6ff; border: 1px solid #58a6ff; 
-            padding: 6px; width: 55px; text-align: center; border-radius: 5px; 
-            font-family: inherit; font-size: 0.9rem; outline: none;
-        }
-        .input-date::placeholder { color: rgba(88, 166, 255, 0.4); }
-        
-        .btn-calc { 
-            background: #58a6ff; color: #0d1117; border: none; 
-            padding: 6px 14px; border-radius: 5px; cursor: pointer; 
-            font-weight: bold; font-family: inherit; font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .btn-calc:hover { background: #1f6feb; color: #fff; }
-        
-        #hasil { margin-top: 8px; font-size: 0.9rem; color: #58a6ff; font-weight: bold; }
-
-        .author { margin-top: 15px; font-size: 0.85rem; color: #8b949e; }
+        .description { font-size: 1.1rem; margin-top: 15px; color: #8b949e; max-width: 500px; line-height: 1.6; }
+        .author { margin-top: 30px; font-size: 1rem; border-top: 1px solid #30363d; padding-top: 15px; }
         .author span { color: #58a6ff; font-weight: bold; }
+
+        /* KALKULATOR GAYA ASLI */
+        .calc-box { margin-top: 25px; padding: 15px; border: 1px dashed #58a6ff; border-radius: 10px; background: rgba(13, 17, 23, 0.5); display: inline-block; }
+        .input-date { background: transparent; color: #58a6ff; border: 1px solid #58a6ff; padding: 5px; width: 40px; text-align: center; border-radius: 5px; }
+        .btn-calc { background: #58a6ff; color: #0d1117; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- HALAMAN LOGIN / INPUT NAMA -->
-    <div id="overlay">
+    <div id="login-overlay">
         <input type="text" id="namaInput" class="input-nama" placeholder="Masukkan namamu..." autocomplete="off">
         <button class="btn-start" onclick="mulai()">MASUK</button>
     </div>
 
-    <!-- BACKGROUND BINTANG -->
     <div class="stars"></div>
 
-    <!-- KONTEN UTAMA -->
     <div class="container" id="konten">
         <img src="foto.jpg" alt="Foto Profil" class="profile-pic">
+        <div class="typewriter"><h1>SUPIAN</h1></div>
+        <p class="description">Halo <span id="namaUser"></span>! Halaman ini adalah ruang dokumentasi eksperimen kode kelas 87, SMP Negeri 1 Sampit.</p>
         
-        <div>
-            <h1>SUPIAN</h1>
-        </div>
-        
-        <p class="description">Halo <span id="namaUser" style="color:#58a6ff;"></span>! Halaman ini adalah ruang dokumentasi eksperimen kode kelas 87, SMP Negeri 1 Sampit.</p>
-        
-        <!-- KALKULATOR UMUR YANG RAPI DALAM SATU BARIS -->
         <div class="calc-box">
-            <div class="calc-title">KALKULATOR UMUR</div>
-            <div class="calc-row">
-                <input type="number" id="h" class="input-date" placeholder="Tgl">
-                <input type="number" id="b" class="input-date" placeholder="Bln">
-                <input type="number" id="t" class="input-date" placeholder="Thn">
-                <button class="btn-calc" onclick="hitung()">Cek</button>
-            </div>
-            <div id="hasil"></div>
+            <div style="font-size: 0.7rem; margin-bottom: 5px; color:#8b949e;">KALKULATOR UMUR</div>
+            <input type="number" id="h" class="input-date" placeholder="Tgl">
+            <input type="number" id="b" class="input-date" placeholder="Bln">
+            <input type="number" id="t" class="input-date" placeholder="Thn">
+            <br><button class="btn-calc" onclick="hitung()" style="margin-top:10px;">Hitung</button>
+            <div id="hasil" style="margin-top:10px; color:#58a6ff; font-weight:bold;"></div>
         </div>
 
         <div class="author">Dibuat oleh <span>pyy</span></div>
@@ -158,25 +84,18 @@
             let nama = document.getElementById("namaInput").value;
             if(nama == "") { alert("Isi nama dulu bos!"); return; }
             document.getElementById("namaUser").innerHTML = nama;
-            document.getElementById("overlay").style.display = 'none';
+            document.getElementById("login-overlay").style.display = 'none';
             document.getElementById("konten").style.display = 'block';
             document.getElementById("bg").play();
         }
-
         function hitung() {
             let h = parseInt(document.getElementById("h").value);
             let b = parseInt(document.getElementById("b").value);
             let t = parseInt(document.getElementById("t").value);
-            if (!h || !b || !t) {
-                document.getElementById("hasil").innerHTML = "Isi tanggal lahirnya!";
-                return;
-            }
+            if (!h || !b || !t) return;
             let d = new Date(), birth = new Date(t, b-1, h);
             let age = new Date(d - birth);
-            let tahun = age.getUTCFullYear() - 1970;
-            let bulan = age.getUTCMonth();
-            let hari = age.getUTCDate() - 1;
-            document.getElementById("hasil").innerHTML = tahun + " Thn, " + bulan + " Bln, " + hari + " Hari";
+            document.getElementById("hasil").innerHTML = (age.getUTCFullYear()-1970) + " Thn, " + age.getUTCMonth() + " Bln, " + (age.getUTCDate()-1) + " Hari";
         }
     </script>
 </body>
