@@ -24,80 +24,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supian - by pyy</title>
     <style>
-        body { margin: 0; padding: 0; min-height: 100vh; background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; overflow-y: auto; overflow-x: hidden; position: relative; }
-        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center; animation: moveStars 150s linear infinite; opacity: 0.3; }
+        body { margin: 0; padding: 0; height: 100vh; background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+        .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center; animation: moveStars 150s linear infinite; opacity: 0.3; }
+        @keyframes moveStars { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+
+        /* OVERLAY LOGIN */
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .input-nama { padding: 10px; border-radius: 5px; border: 1px solid #58a6ff; background: transparent; color: #58a6ff; text-align: center; margin-bottom: 10px; }
+        .btn-start { padding: 10px 30px; border: 1px solid #58a6ff; background: #58a6ff; color: #0d1117; cursor: pointer; border-radius: 5px; font-weight: bold; }
+
+        .container { text-align: center; z-index: 1; padding: 20px; display: none; }
+        .profile-pic { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #58a6ff; margin-bottom: 20px; }
+        h1 { font-size: 5rem; margin: 0; background: linear-gradient(90deg, #58a6ff, #1f6feb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .description { font-size: 1.1rem; margin-top: 15px; color: #8b949e; }
         
-        /* LAYAR LOGIN (Pintu Masuk) */
-        #login-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:#0d1117; z-index:99; display:flex; justify-content:center; align-items:center; }
-        .btn-masuk { padding: 15px 40px; font-size: 1.5rem; color: #58a6ff; border: 2px solid #58a6ff; background: transparent; border-radius: 50px; cursor: pointer; }
-        
-        .container { text-align: center; z-index: 2; padding: 20px; width: 100%; max-width: 600px; }
-        .profile-pic { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #58a6ff; box-shadow: 0 0 20px rgba(88, 166, 255, 0.5); margin-bottom: 20px; }
-        h1 { font-size: 4.5rem; margin: 0; background: linear-gradient(90deg, #58a6ff, #1f6feb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .description { font-size: 1.1rem; margin-top: 10px; color: #8b949e; line-height: 1.6; }
-        
-        .author { margin-top: 20px; font-size: 1rem; }
-        .author span { color: #58a6ff; font-weight: bold; }
-        .btn-glow { display: inline-block; margin-top: 20px; padding: 10px 25px; text-decoration: none; font-size: 1rem; border-radius: 8px; color: #58a6ff; border: 2px solid #58a6ff; }
-        
-        .countdown-box { margin: 30px auto; padding: 15px; width: 90%; max-width: 350px; border: 1px dashed #58a6ff; background-color: rgba(13, 17, 23, 0.8); border-radius: 10px; }
-        .input-date { background: transparent; color: #58a6ff; border: 1px solid #58a6ff; padding: 8px; width: 25%; text-align: center; border-radius: 5px; }
-        .btn-calc { background: #58a6ff; color: #0d1117; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .calc-box { margin-top: 25px; padding: 15px; border: 1px dashed #58a6ff; border-radius: 10px; background: rgba(13, 17, 23, 0.5); }
+        .input-date { background: transparent; color: #58a6ff; border: 1px solid #58a6ff; padding: 5px; width: 50px; text-align: center; border-radius: 5px; }
+        .btn-calc { background: #58a6ff; color: #0d1117; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="stars"></div>
-    
-    <!-- Pintu Masuk (Agar Musik Bisa Play) -->
-    <div id="login-overlay">
-        <button class="btn-masuk" onclick="startWeb()">MASUK</button>
+
+    <div id="overlay">
+        <input type="text" id="namaInput" class="input-nama" placeholder="Masukkan namamu..." autocomplete="off">
+        <button class="btn-start" onclick="mulai()">MASUK</button>
     </div>
 
-    <div class="container">
+    <div class="stars"></div>
+
+    <div class="container" id="konten">
         <img src="foto.jpg" alt="Foto Profil" class="profile-pic">
         <h1>SUPIAN</h1>
-        <p class="description">wellcome le! Halaman ini adalah ruang dokumentasi eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.</p>
+        <p class="description">Halo <span id="namaUser" style="color:#58a6ff;"></span>! Halaman ini adalah ruang dokumentasi eksperimen kode kelas 87, SMP Negeri 1 Sampit.</p>
         
-        <div class="author">Dibuat oleh <span>pyy</span></div>
-        <div>
-            <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
+        <div class="calc-box">
+            <div style="font-size: 0.7rem; margin-bottom: 5px;">KALKULATOR UMUR</div>
+            <input type="number" id="h" class="input-date" placeholder="Tgl">
+            <input type="number" id="b" class="input-date" placeholder="Bln">
+            <input type="number" id="t" class="input-date" placeholder="Thn">
+            <br><button class="btn-calc" onclick="hitung()">Hitung</button>
+            <div id="hasil" style="margin-top:10px; color:#58a6ff; font-weight:bold;"></div>
         </div>
-        
-        <div class="countdown-box">
-            <div style="font-size: 0.8rem; margin-bottom: 10px;">🎂 KALKULATOR UMUR</div>
-            <div style="display:flex; justify-content:center; gap:5px;">
-                <input type="number" id="inputHari" class="input-date" placeholder="Tgl">
-                <input type="number" id="inputBulan" class="input-date" placeholder="Bln">
-                <input type="number" id="inputTahun" class="input-date" placeholder="Thn">
-            </div>
-            <button class="btn-calc" onclick="hitungUmur()">Hitung</button>
-            <div id="hasilUmur" style="margin-top:10px; color:#58a6ff; font-weight:bold;"></div>
-        </div>
-
-        <audio id="bgMusic" loop>
-            <source src="musik.mp3" type="audio/mpeg">
-        </audio>
     </div>
 
-    <script>
-        function startWeb() {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('bgMusic').play();
-        }
+    <audio id="bg" loop><source src="musik.mp3" type="audio/mpeg"></audio>
 
-        function hitungUmur() {
-            let h = parseInt(document.getElementById("inputHari").value);
-            let b = parseInt(document.getElementById("inputBulan").value);
-            let t = parseInt(document.getElementById("inputTahun").value);
-            if (isNaN(h) || isNaN(b) || isNaN(t)) { alert("Isi lengkap dulu le!"); return; }
-            let bDate = new Date(t, b - 1, h);
-            let now = new Date();
-            let y = now.getFullYear() - bDate.getFullYear();
-            let m = now.getMonth() - bDate.getMonth();
-            let d = now.getDate() - bDate.getDate();
-            if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-            if (m < 0) { y--; m += 12; }
-            document.getElementById("hasilUmur").innerHTML = y + " Thn, " + m + " Bln, " + d + " Hari";
+    <script>
+        function mulai() {
+            let nama = document.getElementById("namaInput").value;
+            if(nama == "") { alert("Isi nama dulu bos!"); return; }
+            document.getElementById("namaUser").innerHTML = nama;
+            document.getElementById("overlay").style.display = 'none';
+            document.getElementById("konten").style.display = 'block';
+            document.getElementById("bg").play();
+        }
+        function hitung() {
+            let h = parseInt(document.getElementById("h").value);
+            let b = parseInt(document.getElementById("b").value);
+            let t = parseInt(document.getElementById("t").value);
+            if (!h || !b || !t) return;
+            let d = new Date(), birth = new Date(t, b-1, h);
+            let age = new Date(d - birth);
+            document.getElementById("hasil").innerHTML = (age.getUTCFullYear()-1970) + " Thn, " + age.getUTCMonth() + " Bln, " + (age.getUTCDate()-1) + " Hari";
         }
     </script>
 </body>
