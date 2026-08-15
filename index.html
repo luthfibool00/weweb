@@ -26,253 +26,141 @@
     <style>
         /* Pengaturan Dasar & Background */
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background-color: #0d1117; 
-            color: #c9d1d9; 
+            margin: 0; padding: 0; height: 100vh;
+            background-color: #0d1117; color: #c9d1d9; 
             font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; 
-            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            overflow-y: auto; overflow-x: hidden; position: relative;
         }
 
-        /* Efek Partikel Bintang (Background) */
+        /* Efek Partikel Bintang */
         .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             background: transparent url('https://cdn.pixabay.com/photo/2016/01/27/15/25/space-1164579_960_720.png') repeat top center;
-            animation: moveStars 150s linear infinite;
-            opacity: 0.3;
+            animation: moveStars 150s linear infinite; opacity: 0.3;
         }
-
-        @keyframes moveStars {
-            from { background-position: 0 0; }
-            to { background-position: -10000px 5000px; }
-        }
+        @keyframes moveStars { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
 
         /* Kontainer Utama */
-        .container {
-            text-align: center;
-            z-index: 1; 
-            padding: 20px;
-        }
+        .container { text-align: center; z-index: 1; padding: 20px; width: 100%; max-width: 600px; }
 
-        /* Gaya untuk Foto Profil */
+        /* Foto Profil */
         .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #58a6ff;
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 0.5s;
+            width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
+            border: 3px solid #58a6ff; box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
+            margin-bottom: 20px; opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 0.5s;
         }
 
         /* Efek Mengetik pada Judul */
-        .typewriter {
-            display: inline-block;
-        }
-
+        .typewriter { display: inline-block; }
         h1 {
-            font-size: 5rem;
-            margin: 0;
-            letter-spacing: 8px;
+            font-size: 4.5rem; margin: 0; letter-spacing: 8px;
             background: linear-gradient(90deg, #58a6ff, #1f6feb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0px 0px 25px rgba(88, 166, 255, 0.4);
-            
-            overflow: hidden;
-            border-right: 4px solid #58a6ff;
-            white-space: nowrap;
-            width: 0;
-            animation: typing 2s steps(6, end) forwards, blink 0.8s infinite;
-            animation-delay: 1s; 
+            overflow: hidden; border-right: 4px solid #58a6ff; white-space: nowrap; width: 0;
+            animation: typing 2s steps(6, end) forwards, blink 0.8s infinite; animation-delay: 1s; 
         }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: #58a6ff; } }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink {
-            from, to { border-color: transparent; }
-            50% { border-color: #58a6ff; }
-        }
-
-        /* Teks Lirik (Fitur Baru) */
+        /* Teks Lirik Dewa 19 */
         .lyrics {
-            margin-top: 15px;
-            font-style: italic;
-            color: #8b949e;
-            line-height: 1.5;
-            font-size: 0.95rem;
-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 2.8s; /* Muncul tepat setelah efek ketik selesai */
+            margin-top: 15px; font-style: italic; color: #8b949e; line-height: 1.5; font-size: 0.95rem;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.2); opacity: 0;
+            animation: fadeIn 1s ease-in forwards; animation-delay: 2.8s;
         }
 
-        /* Teks Deskripsi */
+        /* Teks Deskripsi (wellcome le) */
         .description {
-            font-size: 1.1rem;
-            margin-top: 15px;
-            color: #8b949e;
-            max-width: 500px;
-            line-height: 1.6;
-            margin-left: auto;
-            margin-right: auto;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 3.5s; 
+            font-size: 1.1rem; margin-top: 15px; color: #8b949e; line-height: 1.6;
+            opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 3.5s; 
         }
 
         /* Info Pembuat */
         .author {
-            margin-top: 30px;
-            font-size: 1rem;
-            border-top: 1px solid #30363d;
-            padding-top: 15px;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 4s;
+            margin-top: 30px; font-size: 1rem; border-top: 1px dashed #30363d; padding-top: 15px;
+            opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 4s;
         }
+        .author span { color: #58a6ff; font-weight: bold; letter-spacing: 2px; }
 
-        .author span {
-            color: #58a6ff;
-            font-weight: bold;
-            letter-spacing: 2px;
+        /* Tombol Repositori & Musik */
+        .btn-glow, .btn-music {
+            display: inline-block; margin-top: 20px; padding: 10px 25px;
+            text-decoration: none; font-size: 1rem; border-radius: 8px; font-family: inherit;
+            transition: 0.3s ease-in-out; cursor: pointer; opacity: 0;
+            animation: fadeIn 1s ease-in forwards; animation-delay: 4.5s;
         }
+        .btn-glow { color: #58a6ff; border: 2px solid #58a6ff; background-color: rgba(13, 17, 23, 0.8); }
+        .btn-glow:hover { background-color: #58a6ff; color: #0d1117; box-shadow: 0 0 15px #58a6ff; }
+        
+        .btn-music { color: #0d1117; border: 2px solid #58a6ff; background: #58a6ff; box-shadow: 0 0 15px rgba(88, 166, 255, 0.5); font-weight: bold; margin-left: 10px; }
+        .btn-music:hover { background: transparent; color: #58a6ff; box-shadow: none; }
 
-        /* Tombol Glow (Lihat Repositori) */
-        .btn-glow {
-            margin-top: 25px;
-            padding: 10px 25px;
-            color: #58a6ff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            border: 2px solid #58a6ff;
-            border-radius: 8px;
-            transition: 0.3s ease-in-out;
-            background-color: rgba(13, 17, 23, 0.8);
-            display: inline-block;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 4.5s;
-        }
-
-        .btn-glow:hover {
-            background-color: #58a6ff;
-            color: #0d1117;
-            box-shadow: 0 0 15px #58a6ff, 0 0 30px #58a6ff;
-            cursor: pointer;
-        }
-
-        /* Tombol Musik */
-        .btn-music {
-            margin-top: 20px;
-            padding: 8px 20px;
-            color: #58a6ff;
-            border: 1px solid #58a6ff;
-            background: transparent;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            transition: 0.3s;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 4.8s;
-        }
-
-        .btn-music:hover {
-            background: #58a6ff;
-            color: #0d1117;
-            box-shadow: 0 0 10px #58a6ff;
-        }
-
-        /* Kotak Penghitung Mundur (Fitur Baru) */
+        /* Kotak Kalkulator Umur */
         .countdown-box {
-            margin: 25px auto 0 auto;
-            padding: 15px;
-            border: 1px dashed #58a6ff;
-            background-color: rgba(13, 17, 23, 0.6);
-            border-radius: 10px;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-            animation-delay: 5.2s; /* Muncul paling akhir */
-            display: inline-block;
+            margin: 30px auto 20px auto; padding: 15px;
+            border: 1px dashed #58a6ff; background-color: rgba(13, 17, 23, 0.6);
+            border-radius: 10px; opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 5s;
         }
+        .countdown-title { font-size: 0.9rem; color: #8b949e; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .countdown-title { 
-            font-size: 0.8rem; 
-            color: #8b949e; 
-            margin-bottom: 5px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
+        .input-date {
+            background-color: transparent; color: #58a6ff; border: 1px solid #58a6ff;
+            padding: 8px 10px; border-radius: 5px; font-family: inherit; font-size: 1rem;
+            margin-bottom: 10px; outline: none; cursor: pointer; width: 80%; max-width: 200px; text-align: center;
         }
+        .input-date::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         
-        #countdown-timer { 
-            font-size: 1.1rem; 
-            color: #58a6ff; 
-            font-weight: bold; 
-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.5); 
+        .btn-calc {
+            background: #58a6ff; color: #0d1117; border: 1px solid #58a6ff;
+            padding: 8px 20px; border-radius: 5px; cursor: pointer;
+            font-family: inherit; font-weight: bold; transition: 0.3s;
         }
+        .btn-calc:hover { background: transparent; color: #58a6ff; }
+        
+        #hasilUmur { margin-top: 15px; font-size: 1.1rem; color: #58a6ff; font-weight: bold; text-shadow: 0 0 10px rgba(88, 166, 255, 0.5); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- Animasi Background -->
     <div class="stars"></div>
 
-    <!-- Konten Web -->
     <div class="container">
         
-        <!-- Foto Profil -->
         <img src="foto.jpg" alt="Foto Profil" class="profile-pic">
 
         <div class="typewriter">
             <h1>SUPIAN</h1>
         </div>
         
-        <!-- Lirik Dewa 19 Ditambahkan di sini -->
+        <!-- Lirik Dewa 19 -->
         <div class="lyrics">
             "Meskipun apa kata mereka, takkan mengubah cintaku<br>Walaupun dunia mencela, takkan goyahkan hatiku"
         </div>
         
+        <!-- Teks Deskripsi Editanmu -->
         <p class="description">
             wellcome le! Halaman ini adalah ruang dokumentasi eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.
         </p>
 
         <div class="author">Dibuat oleh <span>pyy</span></div>
 
-        <!-- Tombol Repositori -->
-        <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
-
-        <!-- Tombol Musik -->
-        <button id="musicBtn" class="btn-music" onclick="toggleMusic()">🎵 Play Music</button>
+        <!-- Tombol Link & Musik -->
+        <div>
+            <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
+            <button id="musicBtn" class="btn-music" onclick="toggleMusic()">🎵 Play Music</button>
+        </div>
         
-        <!-- Penghitung Mundur Ditambahkan di sini -->
+        <!-- Kalkulator Umur -->
         <div class="countdown-box">
-            <div class="countdown-title">🚀 Menuju Peringatan HUT SMPN 1 Sampit</div>
-            <div id="countdown-timer">Menghitung waktu...</div>
+            <div class="countdown-title">🎂 Kalkulator Umur</div>
+            <input type="date" id="inputTanggal" class="input-date">
+            <br>
+            <button class="btn-calc" onclick="hitungUmur()">Hitung Umur</button>
+            <div id="hasilUmur"></div>
         </div>
 
         <audio id="bgMusic" loop>
@@ -281,7 +169,6 @@
 
     </div>
 
-    <!-- Script JavaScript untuk Musik dan Hitung Mundur -->
     <script>
         // Logika Musik
         function toggleMusic() {
@@ -296,26 +183,36 @@
             }
         }
 
-        // Logika Penghitung Mundur ke Februari 2027
-        var countDownDate = new Date("Feb 1, 2027 00:00:00").getTime();
-        
-        var hitungMundur = setInterval(function() {
-            var sekarang = new Date().getTime();
-            var jarak = countDownDate - sekarang;
-
-            var hari = Math.floor(jarak / (1000 * 60 * 60 * 24));
-            var jam = Math.floor((jarak % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var menit = Math.floor((jarak % (1000 * 60 * 60)) / (1000 * 60));
-            var detik = Math.floor((jarak % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown-timer").innerHTML = hari + " Hari " + jam + " Jam " + menit + " Menit " + detik + " Detik ";
-
-            if (jarak < 0) {
-                clearInterval(hitungMundur);
-                document.getElementById("countdown-timer").innerHTML = "🎉 SELAMAT HARI ULANG TAHUN! 🎉";
+        // Logika Kalkulator Umur
+        function hitungUmur() {
+            let input = document.getElementById("inputTanggal").value;
+            
+            if (input === "") {
+                document.getElementById("hasilUmur").innerHTML = "Pilih tanggal lahirnya dulu, le!";
+                return;
             }
-        }, 1000);
-    </script>
 
+            let birthDate = new Date(input);
+            let today = new Date();
+
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let ageMonths = today.getMonth() - birthDate.getMonth();
+            let ageDays = today.getDate() - birthDate.getDate();
+
+            if (ageDays < 0) {
+                ageMonths--;
+                let lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                ageDays += lastMonth.getDate();
+            }
+            if (ageMonths < 0) {
+                ageYears--;
+                ageMonths += 12;
+            }
+
+            // Tampilkan Hasil
+            document.getElementById("hasilUmur").innerHTML = 
+                ageYears + " Tahun, " + ageMonths + " Bulan, " + ageDays + " Hari";
+        }
+    </script>
 </body>
 </html>
