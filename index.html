@@ -35,7 +35,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Mencegah scroll dari efek partikel */
+            overflow: hidden; 
             position: relative;
         }
 
@@ -60,8 +60,22 @@
         /* Kontainer Utama */
         .container {
             text-align: center;
-            z-index: 1; /* Supaya teks berada di atas partikel */
+            z-index: 1; 
             padding: 20px;
+        }
+
+        /* Gaya untuk Foto Profil */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #58a6ff;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 0.5s;
         }
 
         /* Efek Mengetik pada Judul */
@@ -78,12 +92,12 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0px 0px 25px rgba(88, 166, 255, 0.4);
             
-            /* Animasi Mengetik */
             overflow: hidden;
             border-right: 4px solid #58a6ff;
             white-space: nowrap;
             width: 0;
             animation: typing 2s steps(6, end) forwards, blink 0.8s infinite;
+            animation-delay: 1s; /* Mulai ngetik setelah foto muncul */
         }
 
         @keyframes typing {
@@ -107,7 +121,7 @@
             margin-right: auto;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 2.2s; /* Muncul setelah teks selesai mengetik */
+            animation-delay: 3s; 
         }
 
         /* Info Pembuat */
@@ -118,7 +132,7 @@
             padding-top: 15px;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 2.5s;
+            animation-delay: 3.5s;
         }
 
         .author span {
@@ -141,7 +155,7 @@
             display: inline-block;
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
-            animation-delay: 2.8s;
+            animation-delay: 4s;
         }
 
         .btn-glow:hover {
@@ -164,6 +178,10 @@
 
     <!-- Konten Web -->
     <div class="container">
+        
+        <!-- Foto Profil -->
+        <img src="foto.jpg" alt="Foto Profil" class="profile-pic">
+
         <div class="typewriter">
             <h1>SUPIAN</h1>
         </div>
