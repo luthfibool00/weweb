@@ -71,7 +71,7 @@
             animation: fadeIn 1s ease-in forwards; animation-delay: 2.8s;
         }
 
-        /* Teks Deskripsi (wellcome le) */
+        /* Teks Deskripsi */
         .description {
             font-size: 1.1rem; margin-top: 15px; color: #8b949e; line-height: 1.6;
             opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 3.5s; 
@@ -97,20 +97,23 @@
         .btn-music { color: #0d1117; border: 2px solid #58a6ff; background: #58a6ff; box-shadow: 0 0 15px rgba(88, 166, 255, 0.5); font-weight: bold; margin-left: 10px; }
         .btn-music:hover { background: transparent; color: #58a6ff; box-shadow: none; }
 
-        /* Kotak Kalkulator Umur */
+        /* Kotak Kalkulator Umur (VERSI KETIK) */
         .countdown-box {
-            margin: 30px auto 20px auto; padding: 15px;
+            margin: 30px auto 20px auto; padding: 15px; width: 90%; max-width: 350px;
             border: 1px dashed #58a6ff; background-color: rgba(13, 17, 23, 0.6);
             border-radius: 10px; opacity: 0; animation: fadeIn 1s ease-in forwards; animation-delay: 5s;
         }
-        .countdown-title { font-size: 0.9rem; color: #8b949e; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .countdown-title { font-size: 0.9rem; color: #8b949e; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Barisan Kotak Input */
+        .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
         
         .input-date {
             background-color: transparent; color: #58a6ff; border: 1px solid #58a6ff;
-            padding: 8px 10px; border-radius: 5px; font-family: inherit; font-size: 1rem;
-            margin-bottom: 10px; outline: none; cursor: pointer; width: 80%; max-width: 200px; text-align: center;
+            padding: 8px 5px; border-radius: 5px; font-family: inherit; font-size: 1rem;
+            outline: none; text-align: center; width: 30%;
         }
-        .input-date::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        .input-date::placeholder { color: rgba(88, 166, 255, 0.4); font-size: 0.85rem; }
         
         .btn-calc {
             background: #58a6ff; color: #0d1117; border: 1px solid #58a6ff;
@@ -136,29 +139,29 @@
             <h1>SUPIAN</h1>
         </div>
         
-        <!-- Lirik Dewa 19 -->
         <div class="lyrics">
             "Meskipun apa kata mereka, takkan mengubah cintaku<br>Walaupun dunia mencela, takkan goyahkan hatiku"
         </div>
         
-        <!-- Teks Deskripsi Editanmu -->
         <p class="description">
             wellcome le! Halaman ini adalah ruang dokumentasi eksperimen kode dan proyek dari ltzy murid, SMP Negeri 1 Sampit.
         </p>
 
         <div class="author">Dibuat oleh <span>pyy</span></div>
 
-        <!-- Tombol Link & Musik -->
         <div>
             <a href="https://github.com/luthfibool00" class="btn-glow" target="_blank">Lihat Repositori</a>
             <button id="musicBtn" class="btn-music" onclick="toggleMusic()">🎵 Play Music</button>
         </div>
         
-        <!-- Kalkulator Umur -->
+        <!-- Kalkulator Umur (Versi Tiga Kotak) -->
         <div class="countdown-box">
             <div class="countdown-title">🎂 Kalkulator Umur</div>
-            <input type="date" id="inputTanggal" class="input-date">
-            <br>
+            <div class="input-group">
+                <input type="number" id="inputHari" class="input-date" placeholder="Tgl (1-31)">
+                <input type="number" id="inputBulan" class="input-date" placeholder="Bln (1-12)">
+                <input type="number" id="inputTahun" class="input-date" placeholder="Thn (Misal 2008)">
+            </div>
             <button class="btn-calc" onclick="hitungUmur()">Hitung Umur</button>
             <div id="hasilUmur"></div>
         </div>
@@ -170,7 +173,6 @@
     </div>
 
     <script>
-        // Logika Musik
         function toggleMusic() {
             var audio = document.getElementById("bgMusic");
             var btn = document.getElementById("musicBtn");
@@ -183,16 +185,20 @@
             }
         }
 
-        // Logika Kalkulator Umur
+        // Mesin Hitung Umur Versi Ketik
         function hitungUmur() {
-            let input = document.getElementById("inputTanggal").value;
+            let h = parseInt(document.getElementById("inputHari").value);
+            let b = parseInt(document.getElementById("inputBulan").value);
+            let t = parseInt(document.getElementById("inputTahun").value);
             
-            if (input === "") {
-                document.getElementById("hasilUmur").innerHTML = "Pilih tanggal lahirnya dulu, le!";
+            // Cek kalau ada kotak yang kosong
+            if (isNaN(h) || isNaN(b) || isNaN(t)) {
+                document.getElementById("hasilUmur").innerHTML = "Isi angka lengkapnya dulu, le!";
                 return;
             }
 
-            let birthDate = new Date(input);
+            // Bulan di javascript dimulai dari 0 (Januari = 0), jadi b harus dikurangi 1
+            let birthDate = new Date(t, b - 1, h);
             let today = new Date();
 
             let ageYears = today.getFullYear() - birthDate.getFullYear();
