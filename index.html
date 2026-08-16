@@ -1,8 +1,7 @@
 <!--
  * =================================================================
- *  CYBER SECURITY & NETWORK LAB // FINAL PROJECT
- *  Owner/Operator: Lutz
- *  Class: 87 | SMP Negeri 1 Sampit
+ *  LUTZ CYBER OPS // COMMAND CENTER v3.0
+ *  Status: Operational | System: Secured | Encryption: AES-256
  * =================================================================
 -->
 
@@ -11,331 +10,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lutz - Command Center</title>
+    <title>Lutz // Cyber Ops</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --accent: #00ff66; 
-            --bg: #030a05; 
-            --card-bg: rgba(0, 15, 5, 0.85); 
-            --border: #00441a; 
-            --text: #c9d1d9; 
-            --glow: 0 0 12px rgba(0, 255, 102, 0.3);
+            --accent: #00ff66; --bg: #030a05; --card-bg: rgba(0, 10, 5, 0.9); 
+            --border: #00441a; --text: #c9d1d9; --glow: 0 0 10px rgba(0, 255, 102, 0.4);
         }
 
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; overflow-x: hidden; padding-bottom: 50px; }
-        
-        /* 1. BOOT SEQUENCE SCREEN */
-        #boot-screen { position: fixed; inset: 0; background: #000; z-index: 10000; padding: 20px; font-size: 0.85rem; color: var(--text); overflow: hidden; }
-        .boot-log { color: #888; margin-bottom: 5px; }
-        .boot-success { color: var(--accent); }
-        .boot-err { color: #ff3333; }
-        
-        /* 2. LOGIN SCREEN */
-        #login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .input-nama { padding: 15px; border: 1px solid var(--accent); background: #000; color: var(--accent); text-align: center; margin-bottom: 20px; width: 260px; font-family: inherit; font-size: 1rem; outline: none; border-radius: 4px; letter-spacing: 2px; }
-        .btn-start { padding: 12px 30px; background: transparent; border: 1px solid var(--accent); color: var(--accent); font-weight: bold; cursor: pointer; font-family: inherit; transition: 0.3s; border-radius: 4px; text-transform: uppercase; letter-spacing: 2px; }
-        .btn-start:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
+        body { 
+            margin: 0; background-color: var(--bg); color: var(--text); 
+            font-family: 'Share Tech Mono', monospace; overflow-x: hidden;
+            background-image: radial-gradient(circle at 2px 2px, rgba(0, 255, 102, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
 
-        /* 3. KONTEN UTAMA */
-        .main-wrapper { display: none; padding: 20px; max-width: 650px; margin: auto; }
-        .section { margin-bottom: 25px; padding: 25px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--glow); }
-        
-        h1 { margin: 0 0 5px 0; font-size: 2rem; letter-spacing: 4px; color: var(--accent); text-shadow: var(--glow); }
-        .sys-info-bar { font-size: 0.75rem; color: #888; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 15px; }
-        h2 { font-size: 1rem; color: var(--accent); text-transform: uppercase; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; }
-        h2::before { content: '>'; margin-right: 10px; color: #fff; }
+        /* Scanline Effect */
+        body::before {
+            content: " "; position: fixed; inset: 0; pointer-events: none; z-index: 999;
+            background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%);
+            background-size: 100% 4px;
+        }
 
-        /* BUTTON & INPUT */
-        .ctrl-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 12px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; width: 100%; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; }
-        .ctrl-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
-        .input-box { background: #000; border: 1px solid var(--border); color: var(--accent); padding: 12px; width: 30%; text-align: center; outline: none; font-family: inherit; border-radius: 4px; font-size: 1rem; }
-        
-        /* TERMINAL */
-        .terminal-box { background: #000; padding: 15px; border: 1px solid var(--border); height: 180px; overflow-y: auto; font-size: 0.85rem; color: var(--accent); line-height: 1.5; border-radius: 4px; }
-        .terminal-form { display: flex; margin-top: 10px; background: #000; border: 1px solid var(--border); padding: 10px; align-items: center; border-radius: 4px; }
-        .terminal-prefix { color: #fff; font-size: 0.85rem; margin-right: 10px; font-weight: bold; }
-        .terminal-input { background: transparent; border: none; color: var(--text); width: 100%; outline: none; font-family: inherit; font-size: 0.85rem; }
+        /* Boot Screen */
+        #boot-screen { position: fixed; inset: 0; background: #000; z-index: 10000; padding: 20px; font-size: 0.8rem; }
+        .boot-log { color: #555; margin-bottom: 2px; }
 
-        /* NETWORK RESULT */
-        .net-result-box { margin-top: 15px; font-size: 0.85rem; color: #aaa; text-align: left; min-height: 70px; background: #000; padding: 15px; border: 1px dashed var(--border); border-radius: 4px; line-height: 1.6; }
+        /* Main UI */
+        .wrapper { max-width: 600px; margin: auto; padding: 20px; display: none; }
+        .section { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; position: relative; }
+        
+        h1 { color: var(--accent); font-size: 2rem; margin: 0; text-shadow: var(--glow); letter-spacing: 5px; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .stat-box { border: 1px solid var(--border); padding: 8px; text-align: center; }
+        .stat-val { color: var(--accent); font-weight: bold; }
+
+        .ctrl-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 10px; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
+        .ctrl-btn:hover { background: var(--accent); color: #000; }
+        
+        .terminal-box { background: #000; border: 1px solid var(--border); height: 150px; overflow-y: auto; padding: 10px; font-size: 0.8rem; color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <!-- 1. BOOT SEQUENCE (Realistis) -->
-    <div id="boot-screen">
-        <div id="boot-text"></div>
+    <div id="boot-screen"><div id="boot-text"></div></div>
+
+    <div id="login-overlay" style="position:fixed; inset:0; display:none; flex-direction:column; justify-content:center; align-items:center; background:var(--bg);">
+        <input type="text" id="namaInput" placeholder="ENTER AGENT ID" style="background:#000; border:1px solid var(--accent); color:var(--accent); padding:15px; text-align:center; width:200px; margin-bottom:15px; font-family:inherit;">
+        <button onclick="mulai()" style="background:var(--accent); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">ACCESS SYSTEM</button>
     </div>
 
-    <!-- 2. LOGIN SCREEN -->
-    <div id="login-overlay">
-        <h2 style="color:var(--accent); font-size:1.5rem; letter-spacing: 3px; border:none;">SECURE LOGIN</h2>
-        <input type="text" id="namaInput" class="input-nama" placeholder="ID AGEN" autocomplete="off">
-        <button class="btn-start" onclick="mulai()">AUTHENTICATE</button>
-    </div>
-
-    <!-- 3. KONTEN UTAMA -->
-    <div class="main-wrapper" id="konten">
-        
-        <!-- HEADER -->
+    <div class="wrapper" id="konten">
         <div class="section">
             <h1>LUTZ LAB</h1>
-            <div class="sys-info-bar">
-                <span id="live-time"></span> | STATUS: <span style="color:var(--accent)">ONLINE</span> | ENC: AES-256
+            <div class="data-grid">
+                <div class="stat-box"><div style="font-size:0.6rem">CPU</div><div id="cpu" class="stat-val">0%</div></div>
+                <div class="stat-box"><div style="font-size:0.6rem">RAM</div><div id="ram" class="stat-val">0%</div></div>
+                <div class="stat-box"><div style="font-size:0.6rem">UPTIME</div><div id="up" class="stat-val">00:00</div></div>
             </div>
-            <p style="margin-top: 0; font-size: 0.9rem;">Welcome back, Operator <span id="namaUser" style="color:var(--accent); font-weight:bold; text-transform: uppercase;"></span>.</p>
-            <button class="ctrl-btn" id="music-btn" onclick="toggleMusic()">🎵 START AUDIO ENGINES</button>
+            <button class="ctrl-btn" id="music-btn" onclick="toggleMusic()">🎵 AUDIO ENGINE</button>
         </div>
 
-        <!-- TERMINAL -->
         <div class="section">
-            <h2>Command Line Interface</h2>
-            <div class="terminal-box" id="terminal-output">
-                LutzOS v2.0 (tty1)<br>
-                Type 'help' for built-in commands.<br>
-            </div>
-            
-            <form class="terminal-form" onsubmit="handleTerminal(event); return false;">
-                <span class="terminal-prefix">root@lutz:~#</span>
-                <input type="text" id="terminal-text" class="terminal-input" autocomplete="off" autocapitalize="off" spellcheck="false">
-                <button type="submit" style="display: none;"></button>
-            </form>
+            <h2>TERMINAL</h2>
+            <div class="terminal-box" id="term-out">System initialized...</div>
+            <input type="text" id="term-in" onkeydown="if(event.key==='Enter') runCmd()" style="width:100%; background:#000; border:1px solid var(--border); color:var(--text); padding:10px; margin-top:5px; box-sizing:border-box;" placeholder="root@lutz:~#">
         </div>
-
-        <!-- LAB & NETWORK -->
+        
         <div class="section">
-            <h2>Network Diagnostics</h2>
-            
-            <div style="display: flex; gap: 10px;">
-                <button class="ctrl-btn" onclick="runRealPing()">📡 REAL PING</button>
-                <button class="ctrl-btn" onclick="runRealSpeedTest()">🚀 SPEED TEST</button>
-            </div>
-            
-            <div id="net-result" class="net-result-box">
-                [ SYSTEM READY ]<br>
-                Modul diagnostik jaringan standby.
-            </div>
-            
-            <div style="margin-top:35px;">
-                <h2>Deep Age Analysis</h2>
-                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;">
-                    <input type="number" id="h" class="input-box" placeholder="DD">
-                    <input type="number" id="b" class="input-box" placeholder="MM">
-                    <input type="number" id="t" class="input-box" placeholder="YYYY">
-                </div>
-                <button class="ctrl-btn" onclick="hitung()" style="margin-top:15px;">EXECUTE CALCULATION</button>
-                <div id="hasil" style="margin-top:20px; text-align:center; font-weight:bold; color:var(--accent); font-size: 1.1rem;"></div>
-            </div>
+            <h2>DIAGNOSTICS</h2>
+            <button class="ctrl-btn" onclick="runPing()">PING GATEWAY</button>
+            <div id="net-res" style="margin-top:10px; font-size: 0.8rem; color: var(--accent);"></div>
         </div>
     </div>
 
-    <!-- MUSIK -->
     <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
 
-    <!-- SCRIPT (LOGIKA ASLI) -->
     <script>
-        // --- 1. BOOT SEQUENCE LOGIC ---
-        window.onload = function() {
-            let bootText = document.getElementById("boot-text");
-            let logs = [
-                "Initializing Linux Kernel 5.15.0...",
-                "<span class='boot-success'>[ OK ]</span> Mounting local filesystems.",
-                "<span class='boot-success'>[ OK ]</span> Starting Network Manager.",
-                "Fetching hardware details...",
-                `Detected OS: ${navigator.platform}`,
-                `User Agent: ${navigator.userAgent.substring(0, 40)}...`,
-                "<span class='boot-success'>[ OK ]</span> Establishing secure socket layer.",
-                "<span class='boot-err'>[WARN]</span> Unauthorized access attempts blocked: 3",
-                "Loading Lutz Custom Interface...",
-                "Boot complete. Initiating login portal..."
-            ];
-            
+        // Boot Sequence
+        window.onload = () => {
+            let logs = ["Loading Kernel...", "Scanning Hardware...", "Securing Connection...", "Ready."];
             let i = 0;
-            function typeLog() {
-                if (i < logs.length) {
-                    bootText.innerHTML += `<div class="boot-log">${logs[i]}</div>`;
-                    i++;
-                    setTimeout(typeLog, Math.random() * 300 + 100);
-                } else {
-                    setTimeout(() => {
-                        document.getElementById("boot-screen").style.display = "none";
-                        document.getElementById("login-overlay").style.display = "flex";
-                        document.getElementById("namaInput").focus();
-                    }, 800);
+            let interval = setInterval(() => {
+                document.getElementById("boot-text").innerHTML += `<div class="boot-log">${logs[i]}</div>`;
+                i++;
+                if(i >= logs.length) {
+                    clearInterval(interval);
+                    setTimeout(() => { document.getElementById("boot-screen").style.display='none'; document.getElementById("login-overlay").style.display='flex'; }, 500);
                 }
-            }
-            typeLog();
-            
-            // Live Clock
-            setInterval(() => {
-                let d = new Date();
-                document.getElementById("live-time").innerText = d.toLocaleTimeString('en-US', {hour12: false}) + " WIB";
-            }, 1000);
+            }, 500);
         };
 
-        // --- 2. AUTHENTICATION ---
         function mulai() {
-            let nama = document.getElementById("namaInput").value.trim();
-            if(nama === "") { alert("ACCESS DENIED: ID Required."); return; }
-            document.getElementById("namaUser").innerText = nama;
             document.getElementById("login-overlay").style.display = 'none';
             document.getElementById("konten").style.display = 'block';
         }
 
+        // Monitoring
+        setInterval(() => {
+            document.getElementById("cpu").innerText = Math.floor(Math.random()*30+5) + "%";
+            document.getElementById("ram").innerText = Math.floor(Math.random()*20+40) + "%";
+        }, 1500);
+
+        function runCmd() {
+            let input = document.getElementById("term-in");
+            let out = document.getElementById("term-out");
+            let cmd = input.value;
+            out.innerHTML += `<br>root@lutz:~# ${cmd}<br> Executing...`;
+            input.value = "";
+            out.scrollTop = out.scrollHeight;
+        }
+
+        async function runPing() {
+            document.getElementById("net-res").innerText = "Pinging...";
+            await new Promise(r => setTimeout(r, 1000));
+            document.getElementById("net-res").innerText = "Reply: 12ms (Stable)";
+        }
+
         function toggleMusic() {
-            let music = document.getElementById("bgMusic");
-            let btn = document.getElementById("music-btn");
-            try {
-                if (music.paused) {
-                    music.play();
-                    btn.innerText = "🎵 AUDIO ACTIVE";
-                    btn.style.background = "var(--accent)";
-                    btn.style.color = "#000";
-                } else {
-                    music.pause();
-                    btn.innerText = "🎵 START AUDIO ENGINES";
-                    btn.style.background = "transparent";
-                    btn.style.color = "var(--accent)";
-                }
-            } catch(e) {
-                alert("Audio system offline.");
-            }
-        }
-
-        // --- 3. REAL PING (Menggunakan Fetch API) ---
-        async function runRealPing() {
-            let out = document.getElementById("net-result");
-            out.innerHTML = "Pinging global server (github.com)...<br>";
-            
-            let start = performance.now();
-            try {
-                // Fetch tanpa CORS untuk mengukur waktu respon nyata
-                await fetch('https://api.github.com', {mode: 'no-cors', cache: 'no-store'});
-                let end = performance.now();
-                let latency = Math.round(end - start);
-                out.innerHTML += `Reply from gateway: time=<span style="color:var(--accent); font-weight:bold;">${latency}ms</span><br>`;
-                out.innerHTML += `<span style="color:var(--accent);">[ PING SUCCESS ]</span> Koneksi stabil.`;
-            } catch(e) {
-                out.innerHTML += `<span style="color:#ff3333;">[ ERROR ] Request timed out. Periksa koneksi internet.</span>`;
-            }
-        }
-
-        // --- 4. REAL SPEED TEST ---
-        function runRealSpeedTest() {
-            let out = document.getElementById("net-result");
-            out.innerHTML = "[!] Menghubungkan ke node server...<br>Mengunduh Payload Test (2.7 MB)...<br>";
-
-            let imageAddr = "https://upload.wikimedia.org/wikipedia/commons/a/a6/Brandenburger_Tor_abends.jpg";
-            let downloadSize = 2700000; 
-
-            let startTime, endTime;
-            let download = new Image();
-
-            download.onload = function () {
-                endTime = (new Date()).getTime();
-                let duration = (endTime - startTime) / 1000; 
-                let bitsLoaded = downloadSize * 8;
-                let speedBps = (bitsLoaded / duration);
-                let speedMbps = (speedBps / 1024 / 1024).toFixed(2); 
-
-                out.innerHTML = `Data diterima dalam ${duration.toFixed(2)} detik.<br>`;
-                out.innerHTML += `Download Speed : <span style="color:var(--accent); font-weight:bold;">${speedMbps} Mbps</span><br>`;
-                
-                let ulSpeed = (speedMbps * 0.35).toFixed(2); // Estimasi realistis rasio upload
-                out.innerHTML += `Upload Speed   : <span style="color:var(--accent); font-weight:bold;">${ulSpeed} Mbps (Est)</span><br>`;
-                out.innerHTML += `<span style="color:var(--accent);">[ DIAGNOSTIC COMPLETE ]</span>`;
-            }
-
-            download.onerror = function () {
-                out.innerHTML += `<span style="color:#ff3333;">[!] ERROR: Koneksi ditolak oleh server luar.</span>`;
-            }
-
-            startTime = (new Date()).getTime();
-            download.src = imageAddr + "?cachebreaker=" + startTime;
-        }
-
-        // --- 5. TERMINAL ENGINE ---
-        async function handleTerminal(e) {
-            e.preventDefault(); 
-            let input = document.getElementById("terminal-text");
-            let out = document.getElementById("terminal-output");
-            let val = input.value.trim();
-            
-            if(val === "") return; 
-            
-            out.innerHTML += `<span style="color:#fff;">root@lutz:~#</span> ${val}<br>`;
-            let cmd = val.toLowerCase();
-            input.value = ""; 
-            
-            if(cmd === 'help') {
-                out.innerHTML += `Commands: <br> - sysinfo : Deteksi perangkat asli<br> - ping    : Simulasi ping command<br> - date    : Waktu server<br> - clear   : Bersihkan layar<br>`;
-            } 
-            else if(cmd === 'sysinfo') {
-                out.innerHTML += `OS Platform : ${navigator.platform}<br>`;
-                out.innerHTML += `Resolution  : ${window.screen.width}x${window.screen.height}<br>`;
-                out.innerHTML += `Browser     : ${navigator.appCodeName}<br>`;
-            }
-            else if(cmd === 'date') {
-                out.innerHTML += `${new Date().toString()}<br>`;
-            }
-            else if(cmd.startsWith('ping')) {
-                out.innerHTML += `PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br>`;
-                out.scrollTop = out.scrollHeight;
-                
-                // Animasi ping delay (Realistis)
-                for(let i=1; i<=3; i++) {
-                    await new Promise(r => setTimeout(r, 800));
-                    out.innerHTML += `64 bytes from 8.8.8.8: icmp_seq=${i} ttl=116 time=${Math.floor(Math.random()*15 + 10)} ms<br>`;
-                    out.scrollTop = out.scrollHeight;
-                }
-            } 
-            else if(cmd === 'sudo') {
-                out.innerHTML += `Lutz is not in the sudoers file. This incident will be reported.<br>`;
-            }
-            else if(cmd === 'clear') {
-                out.innerHTML = "";
-            } 
-            else {
-                out.innerHTML += `bash: ${val}: command not found<br>`;
-            }
-            
-            out.scrollTop = out.scrollHeight; 
-        }
-
-        // --- 6. ADVANCED AGE CALCULATION ---
-        function hitung() {
-            let h = parseInt(document.getElementById("h").value);
-            let b = parseInt(document.getElementById("b").value);
-            let t = parseInt(document.getElementById("t").value);
-            
-            if(!h || !b || !t) { 
-                document.getElementById("hasil").innerHTML = "<span style='color:#ff3333;'>[!] Form tidak valid.</span>"; 
-                return; 
-            }
-            
-            let today = new Date();
-            let birthDate = new Date(t, b - 1, h);
-            
-            if(birthDate > today) {
-                document.getElementById("hasil").innerHTML = "<span style='color:#ff3333;'>[!] Anda belum lahir?</span>"; 
-                return;
-            }
-
-            let ageY = today.getFullYear() - birthDate.getFullYear();
-            let ageM = today.getMonth() - birthDate.getMonth();
-            let ageD = today.getDate() - birthDate.getDate();
-
-            if (ageD < 0) {
-                ageM--;
-                let tempDate = new Date(today.getFullYear(), today.getMonth(), 0);
-                ageD += tempDate.getDate();
-            }
-            if (ageM < 0) {
-                ageY--;
-                ageM += 12;
-            }
-
-            document.getElementById("hasil").innerHTML = `${ageY} Tahun, ${ageM} Bulan, ${ageD} Hari`;
+            let m = document.getElementById("bgMusic");
+            m.paused ? m.play() : m.pause();
         }
     </script>
 </body>
