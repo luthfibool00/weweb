@@ -1,7 +1,10 @@
 <!--
  * =================================================================
- *  LUTZ CYBER OPS // COMMAND CENTER v3.0
- *  Status: Operational | System: Secured | Encryption: AES-256
+ *  PROJECT: LUTZ CYBER OPS v5.0 (SECURE EDITION)
+ *  OWNER/DEVELOPER: Luthfi Akbar (Lutz)
+ *  SCHOOL: SMP Negeri 1 Sampit (Class 87)
+ *  WARNING: All rights reserved. Unauthorized copying or theft 
+ *  of this source code is strictly prohibited.
  * =================================================================
 -->
 
@@ -10,126 +13,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lutz // Cyber Ops</title>
+    <title>Lutz // Cyber Ops v5.0 (Protected)</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --accent: #00ff66; --bg: #030a05; --card-bg: rgba(0, 10, 5, 0.9); 
-            --border: #00441a; --text: #c9d1d9; --glow: 0 0 10px rgba(0, 255, 102, 0.4);
-        }
-
-        body { 
-            margin: 0; background-color: var(--bg); color: var(--text); 
-            font-family: 'Share Tech Mono', monospace; overflow-x: hidden;
-            background-image: radial-gradient(circle at 2px 2px, rgba(0, 255, 102, 0.05) 1px, transparent 0);
-            background-size: 40px 40px;
-        }
-
-        /* Scanline Effect */
-        body::before {
-            content: " "; position: fixed; inset: 0; pointer-events: none; z-index: 999;
-            background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%);
-            background-size: 100% 4px;
-        }
-
-        /* Boot Screen */
-        #boot-screen { position: fixed; inset: 0; background: #000; z-index: 10000; padding: 20px; font-size: 0.8rem; }
-        .boot-log { color: #555; margin-bottom: 2px; }
-
-        /* Main UI */
-        .wrapper { max-width: 600px; margin: auto; padding: 20px; display: none; }
-        .section { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; position: relative; }
+        :root { --accent: #00ff66; --bg: #000502; --card: rgba(0, 20, 5, 0.9); }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Share Tech Mono', monospace; overflow-x: hidden; padding-bottom: 30px; user-select: none; }
         
-        h1 { color: var(--accent); font-size: 2rem; margin: 0; text-shadow: var(--glow); letter-spacing: 5px; }
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .stat-box { border: 1px solid var(--border); padding: 8px; text-align: center; }
-        .stat-val { color: var(--accent); font-weight: bold; }
+        /* Matrix Canvas */
+        #matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.15; }
 
-        .ctrl-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 10px; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
-        .ctrl-btn:hover { background: var(--accent); color: #000; }
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        .section { background: var(--card); border: 1px solid #00ff6644; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(8px); }
         
-        .terminal-box { background: #000; border: 1px solid var(--border); height: 150px; overflow-y: auto; padding: 10px; font-size: 0.8rem; color: var(--accent); }
+        h1 { color: var(--accent); margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 5px var(--accent); }
+        h2 { font-size: 1rem; color: var(--accent); border-bottom: 1px dashed #00441a; padding-bottom: 5px; margin-top: 0; }
+        
+        .log-box { background: #000; color: var(--accent); padding: 10px; font-size: 0.75rem; height: 100px; overflow-y: auto; border: 1px solid #00441a; }
+        .term-box { background: #000; color: var(--accent); padding: 10px; height: 150px; overflow-y: auto; font-size: 0.8rem; border: 1px solid #00441a; margin-bottom: 10px; }
+        
+        #cmd-in { background: transparent; border: none; border-bottom: 1px solid var(--accent); color: #fff; width: 100%; outline: none; padding: 5px; font-family: inherit; }
+        .input-box { background: #000; border: 1px solid #00441a; color: var(--accent); padding: 10px; width: 30%; text-align: center; outline: none; font-family: inherit; font-size: 0.9rem; }
+        
+        button { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 10px; width: 100%; cursor: pointer; text-transform: uppercase; font-family: inherit; margin-top: 10px; transition: 0.3s; }
+        button:hover { background: var(--accent); color: #000; }
     </style>
 </head>
 <body>
 
-    <div id="boot-screen"><div id="boot-text"></div></div>
+    <canvas id="matrix"></canvas>
 
-    <div id="login-overlay" style="position:fixed; inset:0; display:none; flex-direction:column; justify-content:center; align-items:center; background:var(--bg);">
-        <input type="text" id="namaInput" placeholder="ENTER AGENT ID" style="background:#000; border:1px solid var(--accent); color:var(--accent); padding:15px; text-align:center; width:200px; margin-bottom:15px; font-family:inherit;">
-        <button onclick="mulai()" style="background:var(--accent); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">ACCESS SYSTEM</button>
-    </div>
-
-    <div class="wrapper" id="konten">
+    <div class="container">
+        <!-- HEADER -->
         <div class="section">
-            <h1>LUTZ LAB</h1>
-            <div class="data-grid">
-                <div class="stat-box"><div style="font-size:0.6rem">CPU</div><div id="cpu" class="stat-val">0%</div></div>
-                <div class="stat-box"><div style="font-size:0.6rem">RAM</div><div id="ram" class="stat-val">0%</div></div>
-                <div class="stat-box"><div style="font-size:0.6rem">UPTIME</div><div id="up" class="stat-val">00:00</div></div>
+            <h1>LUTZ_SECURE_LAB</h1>
+            <div id="status" style="font-size: 0.7rem; margin-top:5px;">OWNER: LUTZ (SMPN 1 SAMPIT) | STATUS: <span style="color:var(--accent)">SECURED</span> | UPTIME: <span id="up">00:00:00</span></div>
+        </div>
+
+        <!-- THREAT FEED -->
+        <div class="section">
+            <h2>// IDS THREAT FEED</h2>
+            <div id="threat-feed" class="log-box"></div>
+        </div>
+
+        <!-- TERMINAL CONSOLE -->
+        <div class="section">
+            <h2>// KERNEL CONSOLE</h2>
+            <div id="term" class="term-box">LutzOS v5.0.0 Secured. Type 'help'.</div>
+            <input type="text" id="cmd-in" placeholder="root@lutz:~#" onkeydown="if(event.key==='Enter') execute()">
+        </div>
+
+        <!-- DEEP AGE CALCULATOR -->
+        <div class="section">
+            <h2>// SUBJECT AGE ANALYSIS</h2>
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;">
+                <input type="number" id="h" class="input-box" placeholder="DD">
+                <input type="number" id="b" class="input-box" placeholder="MM">
+                <input type="number" id="t" class="input-box" placeholder="YYYY">
             </div>
-            <button class="ctrl-btn" id="music-btn" onclick="toggleMusic()">🎵 AUDIO ENGINE</button>
+            <button onclick="hitungUsia()">EXECUTE CHRONO-ANALYSIS</button>
+            <div id="hasil-usia" style="margin-top:10px; text-align:center; font-weight:bold; color:var(--accent); font-size: 0.9rem;"></div>
         </div>
 
+        <!-- CRYPTO ENGINE -->
         <div class="section">
-            <h2>TERMINAL</h2>
-            <div class="terminal-box" id="term-out">System initialized...</div>
-            <input type="text" id="term-in" onkeydown="if(event.key==='Enter') runCmd()" style="width:100%; background:#000; border:1px solid var(--border); color:var(--text); padding:10px; margin-top:5px; box-sizing:border-box;" placeholder="root@lutz:~#">
-        </div>
-        
-        <div class="section">
-            <h2>DIAGNOSTICS</h2>
-            <button class="ctrl-btn" onclick="runPing()">PING GATEWAY</button>
-            <div id="net-res" style="margin-top:10px; font-size: 0.8rem; color: var(--accent);"></div>
+            <h2>// CRYPTO ENGINE</h2>
+            <button onclick="hashData()">GENERATE ENCRYPTED KEY</button>
+            <div id="hash-res" style="margin-top:10px; font-size: 0.75rem; color:var(--accent); word-break: break-all;"></div>
         </div>
     </div>
-
-    <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Boot Sequence
-        window.onload = () => {
-            let logs = ["Loading Kernel...", "Scanning Hardware...", "Securing Connection...", "Ready."];
-            let i = 0;
-            let interval = setInterval(() => {
-                document.getElementById("boot-text").innerHTML += `<div class="boot-log">${logs[i]}</div>`;
-                i++;
-                if(i >= logs.length) {
-                    clearInterval(interval);
-                    setTimeout(() => { document.getElementById("boot-screen").style.display='none'; document.getElementById("login-overlay").style.display='flex'; }, 500);
-                }
-            }, 500);
+        // --- ANTI-THEFT / ANTI-INSPECTION PROTECTION ---
+        // Mencegah klik kanan
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Mencegah tombol pintasan pencurian kode (F12, Ctrl+U, Ctrl+Shift+I, dll)
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) { // F12
+                alert("[!] ACCESS DENIED: Protected source code by Lutz.");
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { // Ctrl+Shift+I / J
+                return false;
+            }
+            if (e.ctrlKey && e.keyCode == 85) { // Ctrl+U (View Source)
+                alert("[!] ACCESS DENIED: Source code is encrypted and owned by Luthfi Akbar.");
+                return false;
+            }
         };
 
-        function mulai() {
-            document.getElementById("login-overlay").style.display = 'none';
-            document.getElementById("konten").style.display = 'block';
-        }
-
-        // Monitoring
+        // Matrix Responsiveness
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+        
+        const drops = Array(Math.floor(canvas.width/15)).fill(1);
         setInterval(() => {
-            document.getElementById("cpu").innerText = Math.floor(Math.random()*30+5) + "%";
-            document.getElementById("ram").innerText = Math.floor(Math.random()*20+40) + "%";
-        }, 1500);
+            ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#0F0';
+            drops.map((y, i) => {
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*15, y*15);
+                drops[i] = y > canvas.height/15 ? 0 : y + 1;
+            });
+        }, 50);
 
-        function runCmd() {
-            let input = document.getElementById("term-in");
-            let out = document.getElementById("term-out");
-            let cmd = input.value;
-            out.innerHTML += `<br>root@lutz:~# ${cmd}<br> Executing...`;
-            input.value = "";
-            out.scrollTop = out.scrollHeight;
+        // Uptime Clock
+        let sec = 0; setInterval(() => {
+            sec++; let h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+            document.getElementById('up').innerText = [h,m,s].map(v => v.toString().padStart(2,'0')).join(':');
+        }, 1000);
+
+        // Terminal logic
+        function execute() {
+            let i = document.getElementById('cmd-in'), o = document.getElementById('term');
+            if(!i.value.trim()) return;
+            o.innerHTML += `<br>root@lutz:~# ${i.value}`;
+            let val = i.value.toLowerCase().trim();
+            if(val === 'help') o.innerHTML += `<br>> Commands: [sysinfo], [clear], [owner]`;
+            else if(val === 'sysinfo') o.innerHTML += `<br>> OS: ${navigator.platform} | Core: ${navigator.hardwareConcurrency || 4}`;
+            else if(val === 'owner') o.innerHTML += `<br>> SYSTEM OWNER: Luthfi Akbar (Lutz) - SMPN 1 Sampit`;
+            else if(val === 'clear') o.innerHTML = "LutzOS v5.0.0 Secured.";
+            else o.innerHTML += `<br>> Executed: ${i.value}`;
+            i.value = ''; o.scrollTop = o.scrollHeight;
         }
 
-        async function runPing() {
-            document.getElementById("net-res").innerText = "Pinging...";
-            await new Promise(r => setTimeout(r, 1000));
-            document.getElementById("net-res").innerText = "Reply: 12ms (Stable)";
+        // Threat Log
+        setInterval(() => {
+            let f = document.getElementById('threat-feed');
+            f.innerHTML += `[${new Date().toLocaleTimeString()}] Blocked: 192.168.1.${Math.floor(Math.random()*255)}<br>`;
+            f.scrollTop = f.scrollHeight;
+        }, 5000);
+
+        // Kalkulator Usia Presisi
+        function hitungUsia() {
+            let h = parseInt(document.getElementById("h").value);
+            let b = parseInt(document.getElementById("b").value);
+            let t = parseInt(document.getElementById("t").value);
+            let res = document.getElementById("hasil-usia");
+            
+            if(!h || !b || !t) { 
+                res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Input tanggal tidak lengkap.</span>"; 
+                return; 
+            }
+            
+            let today = new Date();
+            let birthDate = new Date(t, b - 1, h);
+            
+            if(birthDate > today) {
+                res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Tanggal dari masa depan.</span>"; 
+                return;
+            }
+
+            let ageY = today.getFullYear() - birthDate.getFullYear();
+            let ageM = today.getMonth() - birthDate.getMonth();
+            let ageD = today.getDate() - birthDate.getDate();
+
+            if (ageD < 0) {
+                ageM--;
+                let tempDate = new Date(today.getFullYear(), today.getMonth(), 0);
+                ageD += tempDate.getDate();
+            }
+            if (ageM < 0) {
+                ageY--;
+                ageM += 12;
+            }
+
+            res.innerHTML = `TARGET AGE: ${ageY} Tahun, ${ageM} Bulan, ${ageD} Hari`;
         }
 
-        function toggleMusic() {
-            let m = document.getElementById("bgMusic");
-            m.paused ? m.play() : m.pause();
+        function hashData() {
+            document.getElementById('hash-res').innerText = "KEY: " + btoa(Math.random().toString()).substring(0, 32);
         }
     </script>
 </body>
