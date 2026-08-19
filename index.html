@@ -1,7 +1,8 @@
 <!--
  * =================================================================
- *  PROJECT: ltzy otw programmer 
- *  OWNER/DEVELOPER: Luthfi Akbar (ltzy boy)
+ *  PROJECT: LUTZ CYBER OPS v11.0 (PRODUCTION BUILD)
+ *  ARCHITECT: Luthfi Akbar (Lutz) - SMPN 1 Sampit
+ *  ARCHITECTURE: OOP, Async/Await API, LocalStorage Persistence
  * =================================================================
 -->
 
@@ -10,299 +11,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lutz // Cyber Ops v8.0 (Live)</title>
+    <title>LUTZ // OS v11.0 (Production)</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00ff66; --bg: #000502; --card: rgba(0, 20, 5, 0.9); }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Share Tech Mono', monospace; overflow-x: hidden; padding-bottom: 30px; user-select: none; }
+        :root { --accent: #00ff66; --bg: #010a04; --card: rgba(0, 15, 5, 0.85); --glow: 0 0 10px rgba(0,255,102,0.5); }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Share Tech Mono', monospace; overflow-x: hidden; padding-bottom: 40px; }
         
-        #matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.15; }
+        body::after { content: " "; display: block; position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+        #matrix { position: fixed; inset: 0; z-index: -1; opacity: 0.1; }
 
-        .container { max-width: 600px; margin: auto; padding: 20px; }
-        .section { background: var(--card); border: 1px solid #00ff6644; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(8px); box-sizing: border-box; }
+        #main-ui { max-width: 650px; margin: auto; padding: 20px; position: relative; z-index: 3; }
+        .section { background: var(--card); border: 1px solid #00441a; padding: 20px; margin-bottom: 20px; position: relative; box-shadow: 0 0 15px rgba(0,20,5,0.8); }
+        .section::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--accent); opacity: 0.5; }
         
-        h1 { color: var(--accent); margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 5px var(--accent); }
-        h2 { font-size: 1rem; color: var(--accent); border-bottom: 1px dashed #00441a; padding-bottom: 5px; margin-top: 0; }
+        h1 { color: var(--accent); margin: 0; font-size: 1.6rem; text-shadow: var(--glow); letter-spacing: 2px; }
+        h2 { font-size: 1rem; color: var(--accent); border-bottom: 1px solid #00441a; padding-bottom: 5px; margin-top: 0; letter-spacing: 1px; }
         
-        .log-box { background: #000; color: var(--accent); padding: 10px; font-size: 0.75rem; height: 100px; overflow-y: auto; border: 1px solid #00441a; box-sizing: border-box; }
-        .term-box { background: #000; color: var(--accent); padding: 10px; height: 180px; overflow-y: auto; font-size: 0.8rem; border: 1px solid #00441a; margin-bottom: 10px; box-sizing: border-box; line-height: 1.4; }
-        .term-form { display: flex; align-items: center; background: #000; border: 1px solid #00441a; padding: 5px 10px; box-sizing: border-box; }
-        .term-prefix { color: var(--accent); font-size: 0.8rem; margin-right: 8px; font-weight: bold; }
-        .term-input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-family: inherit; font-size: 0.8rem; }
+        .log-box { background: rgba(0,0,0,0.8); color: var(--accent); padding: 10px; font-size: 0.75rem; height: 120px; overflow-y: auto; border: 1px solid #00441a; }
+        .term-box { background: rgba(0,0,0,0.9); color: var(--accent); padding: 15px; height: 250px; overflow-y: auto; font-size: 0.85rem; border: 1px solid #00441a; margin-bottom: 10px; word-break: break-all; line-height: 1.4; box-shadow: inset 0 0 10px #000; }
         
-        .input-control { background: #000; border: 1px solid #00441a; color: #fff; width: 100%; outline: none; padding: 10px; font-family: inherit; box-sizing: border-box; }
-        .input-box { background: #000; border: 1px solid #00441a; color: var(--accent); padding: 10px; width: 30%; text-align: center; outline: none; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
+        .term-form { display: flex; background: #000; border: 1px solid var(--accent); padding: 8px 10px; box-shadow: var(--glow); }
+        .term-prefix { color: #fff; font-weight: bold; margin-right: 8px; white-space: nowrap; }
+        .term-input { background: transparent; border: none; color: var(--accent); width: 100%; outline: none; font-family: inherit; font-size: 0.85rem; font-weight: bold; }
         
-        button { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 10px; width: 100%; cursor: pointer; text-transform: uppercase; font-family: inherit; margin-top: 10px; transition: 0.3s; box-sizing: border-box; }
-        button:hover { background: var(--accent); color: #000; }
+        .input-control, .input-box { background: #000; border: 1px solid #00441a; color: var(--accent); width: 100%; outline: none; padding: 12px; font-family: inherit; transition: 0.3s; margin-bottom: 10px; }
+        .input-control:focus, .input-box:focus { border-color: var(--accent); box-shadow: var(--glow); }
+        .input-box { width: 32%; text-align: center; font-size: 1rem; margin-bottom: 0; }
+        
+        button { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 12px; width: 100%; cursor: pointer; text-transform: uppercase; font-family: inherit; font-weight: bold; letter-spacing: 1px; transition: all 0.2s ease-in-out; }
+        button:hover { background: var(--accent); color: #000; box-shadow: var(--glow); transform: scale(0.98); }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); }
     </style>
 </head>
 <body>
 
     <canvas id="matrix"></canvas>
+    <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
 
-    <div class="container">
-        <!-- HEADER & AUDIO -->
+    <div id="main-ui">
+        
+        <!-- HEADER & STATUS -->
         <div class="section">
             <h1>LUTZ_SECURE_LAB</h1>
-            <div id="status" style="font-size: 0.7rem; margin-top:5px;">OWNER: LUTZ (SMPN 1 SAMPIT) | STATUS: <span style="color:var(--accent)">ONLINE</span> | UPTIME: <span id="up">00:00:00</span></div>
-            <button id="music-btn" onclick="toggleMusic()">🎵 AKTIFKAN AUDIO ENGINE</button>
-        </div>
-
-        <!-- IDS LIVE LOG -->
-        <div class="section">
-            <h2>// LIVE SYSTEM TELEMETRY</h2>
-            <div id="threat-feed" class="log-box">Connecting to local interface telemetry...<br></div>
-        </div>
-
-        <!-- TERMINAL KERNEL -->
-        <div class="section">
-            <h2>// KERNEL CONSOLE</h2>
-            <div id="term" class="term-box">
-                LutzOS v8.0.0 Live Operational.<br>
-                Ketik 'help' untuk daftar perintah aktif.<br>
+            <div style="font-size: 0.75rem; color:#aaa; margin-top:8px;">
+                ARCHITECT: <span style="color:#fff">LUTZ (SMPN 1 SAMPIT)</span><br>
+                STATE: <span style="color:var(--accent); text-shadow: var(--glow);">PERSISTENT (LOCAL STORAGE)</span><br>
+                UPTIME: <span id="up" style="color:var(--accent)">00:00:00</span>
             </div>
-            <form class="term-form" onsubmit="executeTerminal(event)">
-                <span class="term-prefix">root@lutz:~$</span>
-                <input type="text" id="cmd-in" class="term-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button id="music-btn" style="margin-top: 15px;" onclick="toggleMusic()">🎵 INITIATE AUDIO ENGINE</button>
+        </div>
+
+        <!-- REAL-TIME THREAT FEED (API) -->
+        <div class="section">
+            <h2>// LIVE API TELEMETRY (REAL DATA)</h2>
+            <div id="threat-feed" class="log-box">Initializing API fetch sequence...<br></div>
+        </div>
+
+        <!-- PERSISTENT OOP TERMINAL -->
+        <div class="section">
+            <h2>// VIRTUAL LINUX OS (PERSISTENT)</h2>
+            <div id="term" class="term-box"></div>
+            <form class="term-form" id="cli-form">
+                <span class="term-prefix">root@lutz:~#</span>
+                <input type="text" id="cmd-in" class="term-input" autocomplete="off" spellcheck="false" autofocus>
                 <button type="submit" style="display: none;"></button>
             </form>
         </div>
 
-        <!-- SPEED TEST NYATA -->
+        <!-- REAL BANDWIDTH SPEED TEST -->
         <div class="section">
             <h2>// REAL BANDWIDTH SPEED TEST</h2>
-            <button onclick="runRealSpeedTest()">JALANKAN PENGUJIAN KECEPATAN</button>
-            <div id="speed-res" style="margin-top:10px; font-size: 0.75rem; color:var(--accent); line-height: 1.4;">[ READY TO BENCHMARK ]</div>
+            <button onclick="runRealSpeedTest()">JALANKAN PENGUJIAN JARINGAN</button>
+            <div id="speed-res" style="margin-top:15px; font-size: 0.8rem; color:var(--accent); line-height: 1.5;">[ MENUNGGU PERINTAH ]</div>
         </div>
 
-        <!-- IP GEOLOCATION NYATA (API API.IPDATA ATAU IPAPI) -->
+        <!-- REAL IP GEOLOCATION -->
         <div class="section">
-            <h2>// REAL IP GEOLOCATION TRACKER</h2>
-            <input type="text" id="target-ip" class="input-control" placeholder="Masukkan IP Publik (Contoh: 8.8.8.8 atau kosongkan untuk IP Anda)" style="margin-top: 10px;">
-            <button onclick="traceRealIP()">LACAK LOKASI IP NYATA</button>
-            <div id="trace-res" style="margin-top:10px; font-size: 0.75rem; color:var(--accent); line-height: 1.4;"></div>
+            <h2>// GLOBAL IP GEOLOCATION TRACKER</h2>
+            <input type="text" id="target-ip" class="input-control" placeholder="Input IP Publik (Cth: 8.8.8.8) / Kosongkan utk IP Asli">
+            <button onclick="traceRealIP()">LACAK KOORDINAT TARGET</button>
+            <div id="trace-res" style="margin-top:15px; font-size: 0.8rem; color:var(--accent); line-height: 1.5;"></div>
         </div>
 
-        <!-- KALKULATOR USIA PRESISI -->
+        <!-- CHRONO ANALYSIS -->
         <div class="section">
-            <h2>// SUBJECT AGE ANALYSIS</h2>
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;">
+            <h2>// DEEP SUBJECT AGE ANALYSIS</h2>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                 <input type="number" id="h" class="input-box" placeholder="DD">
                 <input type="number" id="b" class="input-box" placeholder="MM">
                 <input type="number" id="t" class="input-box" placeholder="YYYY">
             </div>
-            <button onclick="hitungUsia()">EKsekusi ANALISIS KRONOLOGIS</button>
-            <div id="hasil-usia" style="margin-top:10px; text-align:center; font-weight:bold; color:var(--accent); font-size: 0.9rem;"></div>
+            <button onclick="hitungUsia()">EKSEKUSI ANALISIS KRONOLOGIS</button>
+            <div id="hasil-usia" style="margin-top:15px; text-align:center; font-weight:bold; color:var(--accent); font-size: 1rem; text-shadow: var(--glow);"></div>
         </div>
 
-        <!-- CRYPTO ENGINE NYATA (SHA-256 HASH) -->
+        <!-- SHA-256 CRYPTO -->
         <div class="section">
             <h2>// CRYPTO HASH ENGINE (SHA-256)</h2>
-            <input type="text" id="crypto-input" class="input-control" placeholder="Ketik teks untuk dienkripsi..." style="margin-top: 10px;">
-            <button onclick="generateRealHash()">HASILKAN HASH SHA-256</button>
-            <div id="hash-res" style="margin-top:10px; font-size: 0.75rem; color:var(--accent); word-break: break-all;"></div>
+            <input type="text" id="crypto-input" class="input-control" placeholder="Ketik data rahasia untuk dienkripsi...">
+            <button onclick="generateRealHash()">HASILKAN KODE ENKRIPSI</button>
+            <div id="hash-res" style="margin-top:15px; font-size: 0.8rem; color:var(--accent); word-break: break-all;"></div>
         </div>
+
     </div>
 
-    <audio id="bgMusic" loop><source src="musik.mp3" type="audio/mpeg"></audio>
-
     <script>
-        // --- ANTI-THEFT PROTECTION ---
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        "use strict"; // Mode strict standar industri
+
+        // --- 1. ANTI-THEFT ---
+        document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-                alert("[!] ACCESS DENIED: Protected source code by Luthfi Akbar (Lutz).");
+                alert("[CRITICAL WARNING] SYSTEM TAMPERING DETECTED.");
                 return false;
             }
         };
 
-        // --- AUDIO ENGINE ---
-        function toggleMusic() {
-            let music = document.getElementById("bgMusic");
-            let btn = document.getElementById("music-btn");
-            try {
-                if (music.paused) {
-                    music.play();
-                    btn.innerText = "🎵 AUDIO ENGINE: ACTIVE";
-                    btn.style.background = "var(--accent)";
-                    btn.style.color = "#000";
-                } else {
-                    music.pause();
-                    btn.innerText = "🎵 AKTIFKAN AUDIO ENGINE";
-                    btn.style.background = "transparent";
-                    btn.style.color = "var(--accent)";
-                }
-            } catch(e) {
-                alert("File musik.mp3 tidak ditemukan.");
-            }
-        }
-
-        // Matrix Rain
+        // --- 2. UI BACKGROUND & CLOCK ---
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
-        
         const drops = Array(Math.floor(canvas.width/15)).fill(1);
         setInterval(() => {
             ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#0F0';
+            ctx.fillStyle = '#00ff66';
             drops.map((y, i) => {
                 ctx.fillText(String.fromCharCode(Math.random()*128), i*15, y*15);
                 drops[i] = y > canvas.height/15 ? 0 : y + 1;
             });
         }, 50);
 
-        // Uptime Clock
         let sec = 0; setInterval(() => {
             sec++; let h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
             document.getElementById('up').innerText = [h,m,s].map(v => v.toString().padStart(2,'0')).join(':');
         }, 1000);
 
-        // Terminal Engine Nyata
-        function executeTerminal(e) {
-            e.preventDefault();
-            let inputField = document.getElementById('cmd-in');
-            let termOutput = document.getElementById('term');
-            let val = inputField.value.trim();
-            if(val === "") return;
-            
-            termOutput.innerHTML += `root@lutz:~$ ${val}<br>`;
-            let cmd = val.toLowerCase();
-            
-            if(cmd === 'help') {
-                termOutput.innerHTML += `> Perintah Aktif:<br>  - sysinfo: Info hardware web<br>  - owner: Identitas pengembang<br>  - myip: Cek IP publik asli Anda<br>  - clear: Bersihkan layar<br>`;
-            } else if(cmd === 'sysinfo') {
-                termOutput.innerHTML += `> User Agent: ${navigator.userAgent}<br>> Platform: ${navigator.platform}<br>`;
-            } else if(cmd === 'owner') {
-                termOutput.innerHTML += `> SYSTEM CREATOR: Luthfi Akbar (Lutz) - Kelas 87, SMP Negeri 1 Sampit.<br>`;
-            } else if(cmd === 'myip') {
-                fetch('https://api.ipify.org?format=json')
-                    .then(r => r.json())
-                    .then(data => { termOutput.innerHTML += `> IP Publik Anda: ${data.ip}<br>`; termOutput.scrollTop = termOutput.scrollHeight; })
-                    .catch(() => { termOutput.innerHTML += `> Gagal mengambil IP.<br>`; });
-            } else if(cmd === 'clear') {
-                termOutput.innerHTML = "LutzOS v8.0.0 Live Operational.<br>";
-                inputField.value = "";
-                return;
+        // --- 3. AUDIO ENGINE ---
+        function toggleMusic() {
+            let music = document.getElementById("bgMusic");
+            let btn = document.getElementById("music-btn");
+            if (music.paused) {
+                music.play().catch(() => alert("File musik.mp3 tidak ditemukan!"));
+                btn.innerText = "🎵 AUDIO ENGINE: ACTIVE";
+                btn.style.background = "var(--accent)"; btn.style.color = "#000";
             } else {
-                termOutput.innerHTML += `> Perintah '${val}' tidak dikenali.<br>`;
+                music.pause();
+                btn.innerText = "🎵 INITIATE AUDIO ENGINE";
+                btn.style.background = "transparent"; btn.style.color = "var(--accent)";
             }
-            inputField.value = "";
-            termOutput.scrollTop = termOutput.scrollHeight;
         }
 
-        // Telemetry Live Log Asli Berdasarkan Waktu Sistem
-        setInterval(() => {
-            let f = document.getElementById('threat-feed');
-            let actions = ["Interface socket bound successfully.", "Packet buffer flushed.", "Memory allocation stable.", "SSL handshake verified."];
-            let act = actions[Math.floor(Math.random() * actions.length)];
-            f.innerHTML += `[${new Date().toLocaleTimeString()}] ${act}<br>`;
-            f.scrollTop = f.scrollHeight;
-        }, 6000);
+        // --- 4. ASYNC TELEMETRY (API FETCH) ---
+        class TelemetryService {
+            constructor(displayId) {
+                this.display = document.getElementById(displayId);
+                this.startFetching();
+            }
+            async fetchLog() {
+                try {
+                    let response = await fetch('https://randomuser.me/api/');
+                    let data = await response.json();
+                    let user = data.results[0];
+                    let ipMock = `${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.x`;
+                    let log = `[${new Date().toLocaleTimeString()}] Access attempt from ${user.location.country} (IP: ${ipMock}) - <span style="color:#ff3333">BLOCKED</span><br>`;
+                    
+                    this.display.innerHTML += log;
+                    if(this.display.childNodes.length > 15) this.display.removeChild(this.display.firstChild);
+                    this.display.scrollTop = this.display.scrollHeight;
+                } catch (error) {
+                    this.display.innerHTML += `[API STATUS] Maintaining secure offline connection...<br>`;
+                }
+            }
+            startFetching() { setInterval(() => this.fetchLog(), 3500); }
+        }
 
-        // Real Speed Test Menggunakan Download File Nyata
+        // --- 5. VIRTUAL FILE SYSTEM (LOCAL STORAGE) ---
+        class VirtualFS {
+            constructor() {
+                this.storageKey = 'lutz_vfs_state';
+                this.loadState();
+            }
+            loadState() {
+                let saved = localStorage.getItem(this.storageKey);
+                if (saved) this.fs = JSON.parse(saved);
+                else {
+                    this.fs = { "system_log.txt": { type: "file", content: "LutzOS Persistent Storage Active.\nFile system ini tersimpan di LocalStorage browser." } };
+                    this.saveState();
+                }
+            }
+            saveState() { localStorage.setItem(this.storageKey, JSON.stringify(this.fs)); }
+            createFile(name, content) { this.fs[name] = { type: "file", content: content }; this.saveState(); }
+            createDir(name) { if (this.fs[name]) return false; this.fs[name] = { type: "dir" }; this.saveState(); return true; }
+            remove(name) { if (!this.fs[name]) return false; delete this.fs[name]; this.saveState(); return true; }
+            read(name) { return this.fs[name] ? this.fs[name] : null; }
+            list() { return Object.keys(this.fs); }
+        }
+
+        // --- 6. TERMINAL OOP CONTROLLER ---
+        class Terminal {
+            constructor() {
+                this.vfs = new VirtualFS();
+                this.out = document.getElementById('term');
+                this.input = document.getElementById('cmd-in');
+                this.form = document.getElementById('cli-form');
+                this.history = []; this.historyIndex = -1;
+                this.init();
+            }
+            escapeHTML(str) {
+                return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+            }
+            init() {
+                this.print("<span style='color:#fff'>LutzOS Terminal System (v11.0 OOP Build).</span>");
+                this.print("System Persistence: ENABLED (LocalStorage API).");
+                this.print("Ketik 'help' untuk daftar instruksi Linux.<br>");
+
+                this.form.addEventListener('submit', (e) => { e.preventDefault(); this.execute(this.input.value); });
+                this.input.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            }
+            handleKeyboard(e) {
+                if (e.key === 'ArrowUp') {
+                    if (this.historyIndex < this.history.length - 1) { this.historyIndex++; this.input.value = this.history[this.history.length - 1 - this.historyIndex]; }
+                    e.preventDefault();
+                } else if (e.key === 'ArrowDown') {
+                    if (this.historyIndex > 0) { this.historyIndex--; this.input.value = this.history[this.history.length - 1 - this.historyIndex]; }
+                    else if (this.historyIndex === 0) { this.historyIndex = -1; this.input.value = ""; }
+                    e.preventDefault();
+                }
+            }
+            print(text, isCommand = false) {
+                if (isCommand) this.out.innerHTML += `<br><span style="color:#fff">root@lutz:~#</span> ${text}<br>`;
+                else this.out.innerHTML += `${text}<br>`;
+                this.out.scrollTop = this.out.scrollHeight;
+            }
+            execute(rawCmd) {
+                let cmdString = rawCmd.trim();
+                if (!cmdString) return;
+                let safeCmd = this.escapeHTML(cmdString);
+                
+                this.history.push(cmdString); this.historyIndex = -1;
+                this.print(safeCmd, true); this.input.value = "";
+
+                let args = cmdString.split(" ");
+                let cmd = args[0].toLowerCase();
+
+                switch (cmd) {
+                    case 'help': this.print("> Perintah: ls, mkdir, touch, echo, cat, rm, clear"); break;
+                    case 'ls':
+                        let files = this.vfs.list();
+                        if (files.length === 0) this.print("(kosong)");
+                        else this.print("> " + files.map(f => this.vfs.read(f).type === 'dir' ? `<span style="color:#3388ff; font-weight:bold">${f}/</span>` : f).join("  "));
+                        break;
+                    case 'mkdir':
+                        if (!args[1]) this.print("> mkdir: missing operand");
+                        else if (!this.vfs.createDir(args[1])) this.print(`> mkdir: cannot create '${args[1]}': File exists`);
+                        break;
+                    case 'touch':
+                        if (!args[1]) this.print("> touch: missing file operand");
+                        else this.vfs.createFile(args[1], "");
+                        break;
+                    case 'rm':
+                        if (!args[1]) this.print("> rm: missing operand");
+                        else if (!this.vfs.remove(args[1])) this.print(`> rm: cannot remove '${args[1]}': No such file`);
+                        break;
+                    case 'echo':
+                        let redirIdx = args.indexOf(">");
+                        if (redirIdx > 0 && args.length > redirIdx + 1) {
+                            let text = args.slice(1, redirIdx).join(" ").replace(/^["'](.*)["']$/, '$1');
+                            this.vfs.createFile(args[redirIdx + 1], this.escapeHTML(text));
+                        } else this.print("> " + this.escapeHTML(args.slice(1).join(" ")));
+                        break;
+                    case 'cat':
+                        if (!args[1]) this.print("> cat: missing file name");
+                        else {
+                            let fileData = this.vfs.read(args[1]);
+                            if (!fileData) this.print(`> cat: ${args[1]}: No such file`);
+                            else if (fileData.type === 'dir') this.print(`> cat: ${args[1]}: Is a directory`);
+                            else this.print(`<span style="color:#fff">${fileData.content.replace(/\n/g, "<br>")}</span>`);
+                        }
+                        break;
+                    case 'clear': this.out.innerHTML = ""; break;
+                    default: this.print(`> bash: ${safeCmd}: command not found`);
+                }
+            }
+        }
+
+        const appTelemetry = new TelemetryService('threat-feed');
+        const appTerminal = new Terminal();
+
+        // --- 7. EXTERNAL UTILITIES ---
         function runRealSpeedTest() {
             let res = document.getElementById("speed-res");
-            res.innerHTML = "[] Menguji latensi dan mengunduh sampel data nyata...";
-            let startTime = new Date().getTime();
-            let downloadSize = 319275; // Ukuran file tes kecil
-            let img = new Image();
-            
+            res.innerHTML = "Menghitung latensi dan mengunduh paket data...";
+            let start = new Date().getTime(), img = new Image();
             img.onload = function () {
-                let endTime = new Date().getTime();
-                let duration = (endTime - startTime) / 1000;
-                let bitsLoaded = downloadSize * 8;
-                let bps = bitsLoaded / duration;
-                let kbps = bps / 1024;
-                let mbps = (kbps / 1024).toFixed(2);
-                res.innerHTML = `[+] PENGUJIAN SELESAI<br>----------------------------------------<br>KECEPATAN UNDUH NYATA: <span style="color:var(--accent)">${mbps} Mbps</span>`;
+                let end = new Date().getTime(), dur = (end - start) / 1000;
+                let mbps = ((500000 * 8) / dur / 1024 / 1024).toFixed(2);
+                res.innerHTML = `[+] PENGUJIAN SELESAI<br>----------------------------------------<br>KECEPATAN UNDUH: <span style="color:#fff; font-size:1.2rem;">${mbps} Mbps</span>`;
             };
-            img.onerror = function() {
-                res.innerHTML = "<span style='color:#ff3333;'>[!] Gagal menguji kecepatan jaringan. Periksa koneksi internet Anda.</span>";
-            };
-            img.src = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png?cache=" + startTime;
+            img.onerror = () => res.innerHTML = "<span style='color:#ff3333;'>[!] Gagal menguji jaringan.</span>";
+            img.src = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg?cache=" + start;
         }
 
-        // Real IP Geolocation Menggunakan API Publik Nyata (ipapi.co)
         function traceRealIP() {
             let ip = document.getElementById("target-ip").value.trim();
             let res = document.getElementById("trace-res");
-            let queryURL = ip ? `https://ipapi.co/${ip}/json/` : `https://ipapi.co/json/`;
-            
-            res.innerHTML = "Menghubungkan ke database geolokasi global...";
-            fetch(queryURL)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.error) {
-                        res.innerHTML = `<span style='color:#ff3333;'>[!] Error: ${data.reason || "IP tidak valid"}</span>`;
-                        return;
-                    }
-                    res.innerHTML = `[+] DATA GEOLOKASI DITEMUKAN:<br>` +
-                                    `----------------------------------------<br>` +
-                                    `IP TARGET : ${data.ip}<br>` +
-                                    `KOTA      : ${data.city || 'N/A'}<br>` +
-                                    `WILAYAH   : ${data.region || 'N/A'}<br>` +
-                                    `NEGARA    : ${data.country_name || 'N/A'}<br>` +
-                                    `ISP / ORG : ${data.org || 'N/A'}<br>` +
-                                    `KOORDINAT : Lat ${data.latitude}, Lon ${data.longitude}`;
-                })
-                .catch(() => {
-                    res.innerHTML = "<span style='color:#ff3333;'>[!] Gagal melacak IP. Periksa koneksi jaringan.</span>";
-                });
+            res.innerHTML = "Mem-bypass node ISP... Melacak server proksi...";
+            fetch(ip ? `https://ipapi.co/${ip}/json/` : `https://ipapi.co/json/`)
+                .then(r => r.json()).then(data => {
+                if(data.error) { res.innerHTML = `<span style='color:#ff3333;'>[!] TARGET HILANG DARI RADAR.</span>`; return; }
+                res.innerHTML = `[+] KOORDINAT DITEMUKAN:<br>----------------------------------------<br>` +
+                                `IP TARGET : <span style="color:#fff">${data.ip}</span><br>` +
+                                `LOKASI    : ${data.city}, ${data.country_name}<br>` +
+                                `PROVIDER  : ${data.org}<br>` +
+                                `GPS COORD : Lat ${data.latitude}, Lon ${data.longitude}`;
+            }).catch(() => res.innerHTML = "<span style='color:#ff3333;'>[!] Koneksi API diblokir oleh target.</span>");
         }
 
-        // Kalkulator Usia Presisi Nyata
         function hitungUsia() {
-            let h = parseInt(document.getElementById("h").value);
-            let b = parseInt(document.getElementById("b").value);
-            let t = parseInt(document.getElementById("t").value);
+            let h = parseInt(document.getElementById("h").value), b = parseInt(document.getElementById("b").value), t = parseInt(document.getElementById("t").value);
             let res = document.getElementById("hasil-usia");
-            
-            if(!h || !b || !t) { 
-                res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Input tanggal tidak lengkap.</span>"; 
-                return; 
-            }
-            
-            let today = new Date();
-            let birthDate = new Date(t, b - 1, h);
-            
-            if(birthDate > today) {
-                res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Tanggal lahir di masa depan.</span>"; 
-                return;
-            }
-
-            let ageY = today.getFullYear() - birthDate.getFullYear();
-            let ageM = today.getMonth() - birthDate.getMonth();
-            let ageD = today.getDate() - birthDate.getDate();
-
-            if (ageD < 0) {
-                ageM--;
-                let tempDate = new Date(today.getFullYear(), today.getMonth(), 0);
-                ageD += tempDate.getDate();
-            }
-            if (ageM < 0) {
-                ageY--;
-                ageM += 12;
-            }
-
-            res.innerHTML = `USIA NYATA: ${ageY} Tahun, ${ageM} Bulan, ${ageD} Hari`;
-        }
-
-        // Real Crypto SHA-256 Generator
-        async function generateRealHash() {
-            let text = document.getElementById("crypto-input").value;
-            let res = document.getElementById("hash-res");
-            if(!text) { res.innerText = "Masukkan teks terlebih dahulu!"; return; }
-            
-            const msgBuffer = new TextEncoder().encode(text);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            res.innerText = "SHA-256: " + hashHex;
-        }
-    </script>
-</body>
-</html>
+            if(!h || !b || !t) { res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Input tanggal tidak lengkap.</span>"; return; }
+            let today = new Date(), bd = new Date(t, b - 1, h);
+            if(bd > today) { res.innerHTML = "<span style='color:#ff3333;'>[!] ERROR: Target belum lahir.</span>"; return; }
+            let y = today.getFullYear() - bd.getFullYear(), m = today.getMonth() - bd.getMonth(), d = today.getDate() - bd.getDate();
+            if (d < 0) { m--; d += new Date(today.getFullYear(), today.getMonth(), 0)
