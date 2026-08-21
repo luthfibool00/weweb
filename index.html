@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUTZ // SECURE OPS - LIVE EDITION</title>
+    <title>LUTZ // SECURE OPS - ULTIMATE EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #05080c; --card: rgba(15, 20, 25, 0.75); --accent: #00ff66; --cyan: #00f2ff; --text: #e2e8f0; --border: rgba(0, 255, 102, 0.2); }
@@ -122,14 +122,14 @@
             </div>
         </div>
 
-        <!-- VIEW 2: TERMINAL -->
+        <!-- VIEW 2: TERMINAL (TERMUX STYLE) -->
         <div id="view-terminal" class="view-section">
             <div class="card">
-                <h2>// KERNEL CONSOLE (LIVE LOGS)</h2>
+                <h2>// KERNEL CONSOLE (LIVE LOGS & CLI)</h2>
                 <div id="term-out" class="console-box"></div>
                 <div style="display: flex; gap: 10px; align-items: center; margin-top: 15px; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 6px; border: 1px solid var(--accent);">
                     <span style="color:var(--accent); font-family:'JetBrains Mono'; font-weight:bold;">root@lutz:~#</span>
-                    <input type="text" id="term-in" placeholder="Ketik command di sini..." style="margin-top:0; border:none; background:transparent; box-shadow:none; padding:10px;">
+                    <input type="text" id="term-in" placeholder="Ketik 'help' di sini..." style="margin-top:0; border:none; background:transparent; box-shadow:none; padding:10px;">
                 </div>
             </div>
         </div>
@@ -189,27 +189,105 @@
             });
         }
 
+        // --- LINUX / TERMUX COMMAND ENGINE ---
         initTerminal() {
-            this.vfs = JSON.parse(localStorage.getItem('lfs') || '{"readme.txt":"System Ready."}');
+            this.vfs = JSON.parse(localStorage.getItem('lfs') || '{"readme.txt":"System Ready. Welcome to LutzOS."}');
             const out = document.getElementById('term-out'), inpt = document.getElementById('term-in');
-            out.innerHTML = "<div>Terminal Instance Loaded. Establishing Live Kernel... [OK]</div>";
+            
+            out.innerHTML = `
+                <div>Terminal Instance Loaded. Establishing Live Kernel... [OK]</div>
+                <div style="margin-bottom:10px;">Type <span style="color:var(--accent)">'help'</span> to see available commands.</div>
+            `;
             
             inpt.addEventListener('keypress', (e) => {
                 if(e.key === 'Enter') {
-                    let cmd = inpt.value.trim(); out.innerHTML += `<div><span style="color:var(--accent)">root@lutz:~#</span> ${cmd}</div>`; inpt.value='';
-                    let [op, arg] = cmd.split(' ');
+                    let cmd = inpt.value.trim();
+                    if(!cmd) return;
                     
-                    if(op === 'ls') out.innerHTML += `<div>${Object.keys(this.vfs).join('  ')}</div>`;
-                    else if(op === 'touch' && arg) { this.vfs[arg]=""; localStorage.setItem('lfs', JSON.stringify(this.vfs)); }
-                    else if(op === 'clear') out.innerHTML = '';
-                    else out.innerHTML += "<div>Command not recognized. Type 'ls', 'touch [name]', or 'clear'.</div>";
+                    out.innerHTML += `<div><span style="color:var(--accent)">root@lutz:~#</span> ${cmd}</div>`;
+                    inpt.value = '';
+                    
+                    let args = cmd.split(' ');
+                    let op = args[0].toLowerCase();
+                    let arg = args.slice(1).join(' '); 
+                    
+                    if (op === 'help') {
+                        out.innerHTML += `
+                        <div style="color:#a0aec0; padding-left:10px; border-left:2px solid var(--accent); margin:5px 0;">
+                            Available commands:<br>
+                            - <span style="color:var(--cyan)">help</span>    : Show this menu<br>
+                            - <span style="color:var(--cyan)">ls</span>      : List directory contents<br>
+                            - <span style="color:var(--cyan)">touch</span>   : Create a new file (usage: touch [filename])<br>
+                            - <span style="color:var(--cyan)">rm</span>      : Remove a file (usage: rm [filename])<br>
+                            - <span style="color:var(--cyan)">cat</span>     : Read a file (usage: cat [filename])<br>
+                            - <span style="color:var(--cyan)">whoami</span>  : Print effective userid<br>
+                            - <span style="color:var(--cyan)">pwd</span>     : Print working directory<br>
+                            - <span style="color:var(--cyan)">date</span>    : Print system date and time<br>
+                            - <span style="color:var(--cyan)">echo</span>    : Print text to terminal<br>
+                            - <span style="color:var(--cyan)">uname</span>   : Print operating system name<br>
+                            - <span style="color:var(--cyan)">neofetch</span>: Show system information<br>
+                            - <span style="color:var(--cyan)">clear</span>   : Clear terminal screen
+                        </div>`;
+                    }
+                    else if (op === 'ls') {
+                        let files = Object.keys(this.vfs);
+                        out.innerHTML += `<div>${files.length > 0 ? files.join(' &nbsp;&nbsp; ') : '(empty)'}</div>`;
+                    }
+                    else if (op === 'touch') {
+                        if(arg) {
+                            this.vfs[arg] = ""; 
+                            localStorage.setItem('lfs', JSON.stringify(this.vfs));
+                        } else out.innerHTML += `<div style="color:#ff4444">touch: missing file operand</div>`;
+                    }
+                    else if (op === 'rm') {
+                        if(arg && this.vfs[arg] !== undefined) {
+                            delete this.vfs[arg]; 
+                            localStorage.setItem('lfs', JSON.stringify(this.vfs));
+                        } else out.innerHTML += `<div style="color:#ff4444">rm: cannot remove '${arg}': No such file or directory</div>`;
+                    }
+                    else if (op === 'cat') {
+                        if(arg && this.vfs[arg] !== undefined) out.innerHTML += `<div>${this.vfs[arg] || '(empty file)'}</div>`;
+                        else out.innerHTML += `<div style="color:#ff4444">cat: ${arg}: No such file or directory</div>`;
+                    }
+                    else if (op === 'echo') out.innerHTML += `<div>${arg}</div>`;
+                    else if (op === 'whoami') out.innerHTML += `<div>root</div>`;
+                    else if (op === 'pwd') out.innerHTML += `<div>/home/root/lutz-os</div>`;
+                    else if (op === 'date') out.innerHTML += `<div>${new Date().toString()}</div>`;
+                    else if (op === 'uname') out.innerHTML += `<div>LutzOS Linux 5.15.0-generic x86_64</div>`;
+                    else if (op === 'neofetch') {
+                        let uptime = Math.floor(performance.now() / 60000); 
+                        out.innerHTML += `
+                        <div style="display:flex; gap:15px; color:var(--text); margin:10px 0;">
+                            <pre style="margin:0; color:var(--accent); font-family:'JetBrains Mono'; font-weight:bold;">
+    .----.
+   /  ..  \\
+  |  /  \\  |
+   \\  \\' /
+    \`----'
+                            </pre>
+                            <div>
+                                <span style="color:var(--accent)">root@lutz</span><br>
+                                ----------------<br>
+                                <span style="color:var(--cyan)">OS</span>: LutzOS Live (Web Env)<br>
+                                <span style="color:var(--cyan)">Kernel</span>: 5.15.0-generic<br>
+                                <span style="color:var(--cyan)">Uptime</span>: ${uptime} mins<br>
+                                <span style="color:var(--cyan)">Packages</span>: 42 (npm)<br>
+                                <span style="color:var(--cyan)">Shell</span>: lutz-bash 5.1.16<br>
+                                <span style="color:var(--cyan)">Terminal</span>: Web-Console
+                            </div>
+                        </div>`;
+                    }
+                    else if (op === 'clear') out.innerHTML = '';
+                    else {
+                        out.innerHTML += `<div style="color:#ff4444">bash: ${op}: command not found. Type 'help' for available commands.</div>`;
+                    }
                     
                     out.scrollTop = out.scrollHeight;
                 }
             });
         }
 
-        // --- 100% ONLINE: FETCH SPEED DARI CLOUDFLARE CDN ---
+        // --- FETCH SPEED DARI CLOUDFLARE CDN ---
         async runLiveSpeedTest() {
             const res = document.getElementById('speed-res');
             const termOut = document.getElementById('term-out');
@@ -217,11 +295,9 @@
             
             try {
                 const startTime = Date.now();
-                // Bypass cache agar selalu ngetes kecepatan baru
                 await fetch('https://speed.cloudflare.com/__down?bytes=25000000', { cache: 'no-store' });
                 const endTime = Date.now();
                 
-                // Kalkulasi Throughput (Mbps)
                 const durationInSeconds = (endTime - startTime) / 1000;
                 const speedMbps = (25 / durationInSeconds).toFixed(2);
                 
@@ -237,7 +313,7 @@
             }
         }
 
-        // --- 100% ONLINE: FETCH LOKASI DARI IPAPI ---
+        // --- FETCH LOKASI DARI IPAPI ---
         async traceLiveIP() {
             let ip = document.getElementById('ip-in').value.trim();
             const res = document.getElementById('ip-res');
@@ -252,37 +328,4 @@
 
                 res.innerHTML = `
                     IP: <span style="color:#fff">${data.ip}</span> <br>
-                    LOC: <span style="color:#fff">${data.city}, ${data.country_name}</span> <br>
-                    ISP: <span style="color:var(--accent)">${data.org}</span>
-                `;
-                
-                if (termOut) {
-                    termOut.innerHTML += `<div><span style="color:var(--cyan)">[GEO-TRACE]</span> Node locked: ${data.city}, ${data.country_name} (${data.ip})</div>`;
-                    termOut.scrollTop = termOut.scrollHeight;
-                }
-            } catch(error) {
-                res.innerHTML = `<span style="color:#ff4444">TRACE FAILED. NODE BLOCKED.</span>`;
-                if (termOut) termOut.innerHTML += `<div><span style="color:#ff4444">[ERR] IP Trace failed or invalid IP.</span></div>`;
-            }
-        }
-
-        calculateAge() {
-            let d = document.getElementById('age-d').value, m = document.getElementById('age-m').value, y = document.getElementById('age-y').value;
-            if(!d || !m || !y) return document.getElementById('age-res').innerHTML = "<span style='color:#ff4444'>[!] INPUT KOSONG</span>";
-            let age = new Date().getFullYear() - y;
-            document.getElementById('age-res').innerHTML = `Target Age: <span style="color:#fff">${age} Years</span>`;
-        }
-
-        async generateHash() {
-            let text = document.getElementById('crypto-in').value;
-            if(!text) return;
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-            document.getElementById('crypto-res').innerHTML = `HASH: <span style="color:#fff">${Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('')}</span>`;
-        }
-    }
-    
-    window.app = new LutzSystem();
-</script>
-</body>
-    </html>
     
